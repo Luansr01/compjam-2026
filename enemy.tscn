@@ -46,8 +46,8 @@ radius = 5.0
 height = 15.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ptxe3"]
-radius = 4.0
-height = 12.0
+radius = 6.0
+height = 22.0
 
 [node name="Enemy" type="CharacterBody2D" unique_id=273659133 node_paths=PackedStringArray("health", "nav", "meleeAttack", "sprite")]
 collision_layer = 2
@@ -89,7 +89,9 @@ team = 1
 [node name="AttackCenter" type="Node2D" parent="ContactDamage" unique_id=1263482442]
 
 [node name="Area2D" type="Area2D" parent="ContactDamage/AttackCenter" unique_id=425931017]
+collision_layer = 0
+collision_mask = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ContactDamage/AttackCenter/Area2D" unique_id=1434933863]
-position = Vector2(2, -1)
+position = Vector2(2, 0)
 shape = SubResource("CapsuleShape2D_ptxe3")
