@@ -14,6 +14,10 @@ public partial class HealthComponent : Node2D
 	public u32 Team => team;
 	public bool IsDead => _isDead;
 	public event Action die;
+
+	public f64 IncomingDamageScale { get; set; } = 1.0;
+
+	public event Action<f64> damaged;
 	
 	public f64 BaseMaxHealth { get; private set; }
 	
@@ -30,21 +34,39 @@ public partial class HealthComponent : Node2D
 	public void TakeDamage(f64 damage) {
 		if (_isDead) return;
 
-		this._currentHealth -= damage;
+		f64 effective = damage * IncomingDamageScale;
+
+		this._currentHealth -= effective;
+		damaged?.Invoke(effective);
 		if(this._currentHealth <= 0) {
 			this._currentHealth = 0;
 			die?.Invoke();
 		}
 	}
 
-
 	public void SetMaxHealth(f64 newHealth){
 		this._maxHealth = (f64) newHealth;
 	}
 
-	/// Set the total upgrade bonus rather than nudging health by a step, so
-	/// applying the same level twice is a no-op. The difference is handed over as
-	/// current health, otherwise a purchase would only matter after the next hit.
+	public void Drain(f64 amount)
+	{
+		if (_isDead || amount <= 0.0) return;
+
+		this._currentHealth -= amount * IncomingDamageScale;
+		if (this._currentHealth <= 0) {
+			this._currentHealth = 0;
+			die?.Invoke();
+		}
+	}
+
+	public void HealFraction(f64 fraction)
+	{
+		if (_isDead) return;
+
+		f64 healed = _currentHealth + _maxHealth * fraction;
+		_currentHealth = healed < _maxHealth ? healed : _maxHealth;
+	}
+
 	public void SetBonusMaxHealth(f64 bonus)
 	{
 		if (_isDead) return;

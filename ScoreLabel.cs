@@ -1,8 +1,6 @@
 using Godot;
 using System;
 
-/// Read-only view of the ScoreManager autoload. Drop it under a CanvasLayer so
-/// the readout stays put while the camera tracks the player.
 public partial class ScoreLabel : Label
 {
 	public i32 Score => ScoreManager.Instance?.Score ?? 0;

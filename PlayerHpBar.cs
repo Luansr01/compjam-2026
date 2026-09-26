@@ -1,18 +1,26 @@
 using Godot;
 
 [GlobalClass]
-public partial class HpBar : TextureProgressBar
+public partial class PlayerHpBar : TextureProgressBar
 {
 	[Export] PlayerControl player;
 	[Export] Label        readout;
 
 	public override void _Process(double delta)
 	{
-		if (player == null || readout == null) return;
+		if (player == null || !GodotObject.IsInstanceValid(player))
+			player = FindPlayer();
+		if (player == null) return;
 
 		HealthComponent health = player.Health;
-		Value                  = health.CurrentHealth;
-		MaxValue               = health.MaxHealth;
-		readout.Text           = $"{health.CurrentHealth:0} / {health.MaxHealth:0}";
+		if (health == null) return;
+
+		Value    = health.CurrentHealth;
+		MaxValue = health.MaxHealth;
+
+		if (readout != null) readout.Text = $"{health.CurrentHealth:0} / {health.MaxHealth:0}";
 	}
+
+	PlayerControl FindPlayer() =>
+		GetTree().Root.FirstOrDefaultNodeOfType<PlayerControl>();
 }

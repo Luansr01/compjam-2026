@@ -7,11 +7,18 @@ public partial class NexusHpBar : TextureProgressBar
 
 	public override void _Process(double delta)
 	{
-		if (nexus == null || readout == null) return;
+		if (nexus == null || !GodotObject.IsInstanceValid(nexus))
+			nexus = FindNexus();
+		if (nexus == null) return;
 
 		HealthComponent health = nexus.Health;
+		if (health == null) return;
+
 		Value                  = health.CurrentHealth;
 		MaxValue               = health.MaxHealth;
-		readout.Text           = $"{health.CurrentHealth:0} / {health.MaxHealth:0}";
+
+		if (readout != null) readout.Text = $"{health.CurrentHealth:0} / {health.MaxHealth:0}";
 	}
+
+	Nexus FindNexus() => GetTree().Root.FirstOrDefaultNodeOfType<Nexus>();
 }
