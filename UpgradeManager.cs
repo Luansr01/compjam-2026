@@ -14,15 +14,9 @@ public partial class UpgradeManager : Node
 {
 	public static UpgradeManager Instance { get; private set; }
 
-	[Export] f32 costGrowth = 1.8f;
-
-	[Export] f64 damagePerLevel    = 0.25;
-	[Export] f64 cooldownPerLevel  = 0.10;
-	[Export] f32 moveSpeedPerLevel = 0.15f;
-
-	[Export] f64 healFractionPerLevel = 0.10;
-
-	readonly Dictionary<UpgradeKind, i32> _levels = [];
+	
+			
+		readonly Dictionary<UpgradeKind, i32> _levels = [];
 
 	public event Action changed;
 
@@ -38,7 +32,7 @@ public partial class UpgradeManager : Node
 	public i32 Level(UpgradeKind kind) => _levels.GetValueOrDefault(kind);
 
 	public i32 Cost(UpgradeKind kind) =>
-		Mathf.RoundToInt(BaseCost(kind) * Mathf.Pow(costGrowth, Level(kind)));
+		Mathf.RoundToInt(BaseCost(kind) * Mathf.Pow(Tuning.UpgradeCostGrowth, Level(kind)));
 
 	public bool CanAfford(UpgradeKind kind) =>
 		ScoreManager.Instance != null && ScoreManager.Instance.Score >= Cost(kind);
@@ -59,7 +53,7 @@ public partial class UpgradeManager : Node
 
 	void Heal(UpgradeKind kind)
 	{
-		f64 fraction = healFractionPerLevel * Level(kind);
+		f64 fraction = Tuning.HealFractionPerLevel * Level(kind);
 		HealTarget(kind)?.HealFraction(fraction);
 	}
 
@@ -89,13 +83,13 @@ public partial class UpgradeManager : Node
 		switch (kind)
 		{
 			case UpgradeKind.MeleeDamage:
-				player.Attack.SetDamageScale(1.0 + damagePerLevel * level);
+				player.Attack.SetDamageScale(1.0 + Tuning.DamagePerLevel * level);
 				break;
 			case UpgradeKind.AttackSpeed:
-				player.Attack.SetCooldownScale(Math.Pow(1.0 - cooldownPerLevel, level));
+				player.Attack.SetCooldownScale(Math.Pow(1.0 - Tuning.CooldownPerLevel, level));
 				break;
 			case UpgradeKind.MoveSpeed:
-				player.SpeedScale = 1.0f + moveSpeedPerLevel * level;
+				player.SpeedScale = (f32)(1.0 + Tuning.MoveSpeedPerLevel * level);
 				break;
 			case UpgradeKind.Heal:
 			case UpgradeKind.NexusHeal:
@@ -108,11 +102,11 @@ public partial class UpgradeManager : Node
 	Nexus FindNexus() => GetTree().Root.FirstOrDefaultNodeOfType<Nexus>();
 
 	static i32 BaseCost(UpgradeKind kind) => kind switch {
-		UpgradeKind.MeleeDamage => 5,
-		UpgradeKind.AttackSpeed => 10,
-		UpgradeKind.MoveSpeed   => 15,
-		UpgradeKind.Heal        => 20,
-		UpgradeKind.NexusHeal   => 30,
-		_                       => 25,
+		UpgradeKind.MeleeDamage => Tuning.UpgradeBaseDamage,
+		UpgradeKind.AttackSpeed => Tuning.UpgradeBaseAttackSpeed,
+		UpgradeKind.MoveSpeed   => Tuning.UpgradeBaseMoveSpeed,
+		UpgradeKind.Heal        => Tuning.UpgradeBaseHeal,
+		UpgradeKind.NexusHeal   => Tuning.UpgradeBaseNexusHeal,
+		_                       => Tuning.UpgradeBaseHeal,
 	};
 }

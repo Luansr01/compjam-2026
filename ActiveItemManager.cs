@@ -11,20 +11,6 @@ public partial class ActiveItemManager : Node
 {
 	public static ActiveItemManager Instance { get; private set; }
 
-	[Export] f32 costGrowth = 1.4f;
-
-	[Export] f64 tauntBaseCost    = 40.0;
-	[Export] f64 tauntDuration    = 8.0;
-	[Export] f64 tauntDamageScale = 2.0;
-
-	[Export] f64 shockwaveBaseCost     = 60.0;
-	[Export] f64 shockwaveCooldown     = 6.0;
-	[Export] f64 shockwaveRadius       = 800.0;
-	[Export] f64 shockwaveDamage       = 40.0;
-	[Export] f32 shockwaveKnockback    = 900.0f;
-	[Export] f64 shockwaveSlowFactor   = 0.35;
-	[Export] f64 shockwaveSlowDuration = 3.0;
-
 	public event Action changed;
 
 	Timer<f64> _taunt;
@@ -36,7 +22,7 @@ public partial class ActiveItemManager : Node
 
 	public bool Taunting => !_taunt.Elapsed;
 
-	public f64 TauntDamageScale => tauntDamageScale;
+	public f64 TauntDamageScale => Tuning.TauntDamageScale;
 
 	public override void _EnterTree() => Instance = this;
 
@@ -85,8 +71,8 @@ public partial class ActiveItemManager : Node
 
 	public i32 Cost(ActiveItem item)
 	{
-		f64 baseCost = item == ActiveItem.Taunt ? tauntBaseCost : shockwaveBaseCost;
-		return (i32)Math.Round(baseCost * Math.Pow(costGrowth, Uses(item)));
+		f64 baseCost = item == ActiveItem.Taunt ? Tuning.TauntBaseCost : Tuning.ShockwaveBaseCost;
+		return (i32)Math.Round(baseCost * Math.Pow(Tuning.ItemCostGrowth, Uses(item)));
 	}
 
 	public bool CanAfford(ActiveItem item) =>
@@ -103,12 +89,12 @@ public partial class ActiveItemManager : Node
 		switch (item)
 		{
 			case ActiveItem.Taunt:
-				_taunt.time = tauntDuration;
+				_taunt.time = Tuning.TauntDuration;
 				_taunt.Restart();
 				break;
 			case ActiveItem.Shockwave:
 				_detonatePending = true;
-				_shockwave.time = shockwaveCooldown;
+				_shockwave.time = Tuning.ShockwaveCooldown;
 				_shockwave.Restart();
 				break;
 		}
@@ -124,7 +110,7 @@ public partial class ActiveItemManager : Node
 
 		Vector2 origin = player.GlobalPosition;
 
-		CircleShape2D shape = new() { Radius = (f32)shockwaveRadius };
+		CircleShape2D shape = new() { Radius = (f32)Tuning.ShockwaveRadius };
 		PhysicsShapeQueryParameters2D query = new()
 		{
 			Shape             = shape,
@@ -143,11 +129,11 @@ public partial class ActiveItemManager : Node
 			if (!GodotObject.IsInstanceValid(enemy)) continue;
 
 			enemy.TakeShockwave(
-				shockwaveDamage, origin, shockwaveKnockback,
-				shockwaveSlowFactor, shockwaveSlowDuration);
+				Tuning.ShockwaveDamage, origin, (f32)Tuning.ShockwaveKnockback,
+				Tuning.ShockwaveSlowFactor, Tuning.ShockwaveSlowDuration);
 		}
 
-		Pulse ring = new() { maxRadius = (f32)shockwaveRadius };
+		Pulse ring = new();
 		GetTree().Root.AddChild(ring);
 		ring.Position = origin;
 	}

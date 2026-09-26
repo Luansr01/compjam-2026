@@ -48,6 +48,16 @@ public partial class HealthComponent : Node2D
 		this._maxHealth = (f64) newHealth;
 	}
 
+	/// Kill outright, ignoring any resistance. Used when something outside combat
+	/// ends an entity's run, so a scaled-down last stand cannot survive it.
+	public void Kill()
+	{
+		if (_isDead) return;
+
+		_currentHealth = 0;
+		die?.Invoke();
+	}
+
 	public void Drain(f64 amount)
 	{
 		if (_isDead || amount <= 0.0) return;

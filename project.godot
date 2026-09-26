@@ -23,6 +23,7 @@ window/stretch/aspect="expand"
 [autoload]
 
 ScoreManager="*res://ScoreManager.cs"
+Tune="*res://tuning.tscn"
 UpgradeManager="*res://UpgradeManager.cs"
 Items="*res://ActiveItemManager.cs"
 Music="*res://music_player.tscn"

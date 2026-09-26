@@ -4,49 +4,49 @@ using Godot;
 public partial class Spawn : Node2D
 {
 	[Export] PackedScene node;
-	[Export] f32        outerRadius = 500.0f;
-	[Export] f32        innerRadius = 300.0f;
-	[Export] f64        spawnRate;
-	[Export] i32        spawnCap;
 
-	[Export] f64 enemiesPerMinute    = 8.0;
-	[Export] f64 rateGrowthPerMinute = 0.8;
-	[Export] f64 speedPerMinute      = 0.08;
-	[Export] f64 damagePerMinute     = 0.10;
-
-	[Export] f64 pointsPerMinute     = 3.0;
-
-	[Export] f64 healthPerMinute = 0.0;
-
-	const f32 RingWidth   = 2.0f;
-	const f32 MarkerSize  = 14.0f;
+	const f32 RingWidth  = 2.0f;
+	const f32 MarkerSize = 14.0f;
 
 	static readonly Color OuterColor = new(0.35f, 0.90f, 0.55f, 0.9f);
 	static readonly Color InnerColor = new(1.00f, 0.60f, 0.30f, 0.9f);
 
 	f64 _elapsed;
+	f32 _threat;
 
 	Timer<f64> _spwanRate;
 
-	f32 Inner => Mathf.Clamp(innerRadius, 0.0f, outerRadius);
+	f32 Outer => (f32)Tuning.OuterRadius;
 
-	public i32 CurrentCap => spawnCap + (i32)(enemiesPerMinute * Minutes);
+	f32 Inner => Mathf.Clamp((f32)Tuning.InnerRadius, 0.0f, Outer);
+
+	public f32 Threat => _threat;
+
+	public i32 CurrentCap =>
+		Tuning.SpawnCap
+		+ (i32)(Tuning.EnemiesPerMinute * Minutes)
+		+ (i32)(Tuning.ThreatCapBonus * _threat);
 
 	f64 Minutes => _elapsed / 60.0;
 
 	public override void _Ready()
 	{
-		_spwanRate = new(0, spawnRate);
+		_spwanRate = new(0, Tuning.SpawnRate);
 		QueueRedraw();
+
+		Nexus nexus = GetTree().Root.FirstOrDefaultNodeOfType<Nexus>();
+		if (nexus != null && nexus.Health != null)
+			nexus.Health.damaged += OnNexusDamaged;
 	}
 
 	public override void _Draw()
 	{
 		if (!Engine.IsEditorHint()) return;
 
+		f32 outer = Outer;
 		f32 inner = Inner;
 
-		DrawCircle(Vector2.Zero, outerRadius, OuterColor, filled: false, width: RingWidth, antialiased: true);
+		DrawCircle(Vector2.Zero, outer, OuterColor, filled: false, width: RingWidth, antialiased: true);
 		if (inner > 0.0f)
 			DrawCircle(Vector2.Zero, inner, InnerColor, filled: false, width: RingWidth, antialiased: true);
 
@@ -55,7 +55,7 @@ public partial class Spawn : Node2D
 
 		for (int i = 0; i < 4; i++) {
 			Vector2 spoke = Vector2.FromAngle(i * Mathf.Pi / 2);
-			DrawLine(spoke * inner, spoke * outerRadius, OuterColor, RingWidth, true);
+			DrawLine(spoke * inner, spoke * outer, OuterColor, RingWidth, true);
 		}
 	}
 
@@ -69,14 +69,21 @@ public partial class Spawn : Node2D
 		_elapsed += delta;
 		f64 minutes = Minutes;
 
-		_spwanRate.time = spawnRate / (1.0 + rateGrowthPerMinute * minutes);
+		if (_threat > 0.0f)
+			_threat = Mathf.Max(0.0f, _threat - (f32)(Tuning.ThreatDecayPerSecond * delta));
+
+		_spwanRate.time = Tuning.SpawnRate
+			/ (1.0 + Tuning.RateGrowthPerMinute * minutes + Tuning.ThreatRateBonus * _threat);
 
 		_spwanRate.Tick(delta);
 		if (GetChildCount() < CurrentCap && _spwanRate.Elapsed) {
 			_spwanRate.Restart();
-			SpawnObject(Random.SampleRing(Inner, outerRadius));
+			SpawnObject(Random.SampleRing(Inner, Outer));
 		}
 	}
+
+	void OnNexusDamaged(f64 amount) =>
+		_threat = Mathf.Min(1.0f, _threat + (f32)Tuning.ThreatPerHit);
 
 	public void SpawnObject(Vector2 spawnPosition)
 	{
@@ -97,21 +104,22 @@ public partial class Spawn : Node2D
 		f64 minutes = Minutes;
 
 		if (enemy.FirstOrDefaultNodeOfType<EnemyControl>() is var control) {
-			control.ScaleSpeed((f32)(1.0 + speedPerMinute * minutes));
-			control.SetKillDifficulty(1.0 + pointsPerMinute * minutes);
+			control.ScaleSpeed((f32)(1.0 + Tuning.SpeedPerMinute * minutes));
+			control.SetKillDifficulty(ScoreManager.Instance?.KillDifficultyAt(minutes) ?? 1.0);
 		}
 
 		if (enemy.FirstOrDefaultNodeOfType<MeleeAttack>() is var attack)
-			attack.SetDamageScale(1.0 + damagePerMinute * minutes);
+			attack.SetDamageScale(1.0 + Tuning.DamagePerMinute * minutes);
 
-		if (healthPerMinute > 0 &&
+		if (Tuning.HealthPerMinute > 0 &&
 			enemy.FirstOrDefaultNodeOfType<HealthComponent>() is var health)
-			health.SetBonusMaxHealth(health.BaseMaxHealth * healthPerMinute * minutes);
+			health.SetBonusMaxHealth(health.BaseMaxHealth * Tuning.HealthPerMinute * minutes);
 	}
 
 	public void ResetDifficulty()
 	{
 		_elapsed = 0;
+		_threat  = 0.0f;
 		_spwanRate.Restart();
 	}
 }

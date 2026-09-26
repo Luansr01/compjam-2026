@@ -6,7 +6,3 @@
 [node name="Spawner" type="Node2D" unique_id=1068368533]
 script = ExtResource("1_ttk4a")
 node = ExtResource("2_mcln3")
-outerRadius = 2000.0
-innerRadius = 500.0
-spawnRate = 5.0
-spawnCap = 5

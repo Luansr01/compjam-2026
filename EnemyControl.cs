@@ -19,7 +19,6 @@ public partial class EnemyControl : CharacterBody2D
 	[Export] NavigationAgent2D nav;
 	[Export] MeleeAttack meleeAttack;
 	[Export] Sprite2D sprite;
-	[Export] f32 HitFlashSeconds = 0.15f;
 
 	[Export] f64 KillDifficulty = 1.0;
 
@@ -41,7 +40,7 @@ public partial class EnemyControl : CharacterBody2D
 
 	void OnDamaged(f64 amount)
 	{
-		_flash = Flash.Hit(this, sprite, HitFlashSeconds);
+		_flash = Flash.Hit(this, sprite, (f32)Tuning.HitFlashSeconds);
 		Numbers.Damage(this, GlobalPosition, amount, new Color(1.0f, 0.95f, 0.6f), 30.0f);
 	}
 

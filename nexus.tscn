@@ -16,9 +16,6 @@ script = ExtResource("1_1b4ah")
 health = NodePath("Health")
 sprite = NodePath("Sprite2D")
 hitSound = NodePath("HitSound")
-DrainEnabled = true
-DrainStartPerSecond = 1.0
-DrainPerMinute = 1.5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1747880333]
 position = Vector2(-27.5, -7)

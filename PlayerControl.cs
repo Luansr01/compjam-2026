@@ -9,10 +9,7 @@ public partial class PlayerControl : CharacterBody2D
 	[Export] Sprite2D        sprite;
 	[Export] AudioStreamPlayer hurtSound;
 	[Export] f32 Speed = 300.0f;
-	[Export] f32 HitFlashSeconds = 0.15f;
 
-	[Export] f64 DesperationThreshold = 0.4;
-	[Export] f64 DesperationBonus     = 0.6;
 
 	public f32 SpeedScale = 1.0f;
 
@@ -24,10 +21,10 @@ public partial class PlayerControl : CharacterBody2D
 			if (health == null || health.MaxHealth <= 0.0) return 1.0f;
 
 			f64 fraction = health.CurrentHealth / health.MaxHealth;
-			if (fraction >= DesperationThreshold || DesperationThreshold <= 0.0) return 1.0f;
+			if (fraction >= Tuning.DesperationThreshold || Tuning.DesperationThreshold <= 0.0) return 1.0f;
 
-			f32 k = (f32)((DesperationThreshold - fraction) / DesperationThreshold);
-			return 1.0f + k * (f32)DesperationBonus;
+			f32 k = (f32)((Tuning.DesperationThreshold - fraction) / Tuning.DesperationThreshold);
+			return 1.0f + k * (f32)Tuning.DesperationBonus;
 		}
 	}
 
@@ -45,9 +42,32 @@ public partial class PlayerControl : CharacterBody2D
 
 	void OnDamaged(f64 amount)
 	{
-		_flash = Flash.Hit(this, sprite, HitFlashSeconds);
+		_flash = Flash.Hit(this, sprite, (f32)Tuning.HitFlashSeconds);
 		hurtSound?.Play();
 		Numbers.Damage(this, GlobalPosition, amount, new Color(1.0f, 0.45f, 0.45f));
+	}
+
+	public override void _Process(double delta)
+	{
+		UpdateDesperation();
+	}
+
+	/// The lower the player gets, the harder they are to actually kill. Paired
+	/// with the speed bonus this makes the last stretch look dire while quietly
+	/// making it survivable.
+	void UpdateDesperation()
+	{
+		if (health == null || health.MaxHealth <= 0.0) return;
+		if (Tuning.DesperationThreshold <= 0.0 || Tuning.DesperationThreshold >= 1.0) return;
+
+		f64 fraction = health.CurrentHealth / health.MaxHealth;
+		if (fraction >= Tuning.DesperationThreshold) {
+			health.IncomingDamageScale = 1.0;
+			return;
+		}
+
+		f32 down = (f32)((Tuning.DesperationThreshold - fraction) / Tuning.DesperationThreshold);
+		health.IncomingDamageScale = 1.0 + down * (f32)(Tuning.DesperationDamageFloor - 1.0);
 	}
 
 	public override void _PhysicsProcess(f64 delta)
