@@ -1,0 +1,164 @@
+[gd_scene format=3 uid="uid://65swgkeebcam"]
+
+[ext_resource type="Script" uid="uid://c0gmdx4jf3mry" path="res://ScoreLabel.cs" id="1_640wx"]
+[ext_resource type="Script" uid="uid://cwcifiptani8y" path="res://UpgradeButton.cs" id="2_a2258"]
+[ext_resource type="Script" uid="uid://ske0gsfwb428" path="res://PlayerHpBar.cs" id="3_1xsix"]
+[ext_resource type="Script" uid="uid://cwrnr8gd2wirk" path="res://NexusHpBar.cs" id="4_rftc2"]
+[ext_resource type="Script" path="res://ItemButton.cs" id="5_itembtn"]
+
+[sub_resource type="Gradient" id="Gradient_bg"]
+colors = PackedColorArray(0.13, 0.14, 0.17, 1, 0.06, 0.07, 0.09, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_bg"]
+gradient = SubResource("Gradient_bg")
+width = 512
+height = 32
+fill_to = Vector2(0, 1)
+
+[sub_resource type="Gradient" id="Gradient_plyr"]
+colors = PackedColorArray(0.36, 0.85, 0.42, 1, 0.12, 0.47, 0.2, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_plyr"]
+gradient = SubResource("Gradient_plyr")
+width = 512
+height = 32
+fill_to = Vector2(0, 1)
+
+[sub_resource type="Gradient" id="Gradient_nxus"]
+colors = PackedColorArray(0.44, 0.75, 0.96, 1, 0.14, 0.38, 0.7, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_nxus"]
+gradient = SubResource("Gradient_nxus")
+width = 512
+height = 32
+fill_to = Vector2(0, 1)
+
+[node name="HUD" type="CanvasLayer" unique_id=1417891909]
+
+[node name="ScoreLabel" type="Label" parent="." unique_id=2014050682]
+offset_left = 16.0
+offset_top = 8.0
+offset_right = 220.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 24
+script = ExtResource("1_640wx")
+
+[node name="Shop" type="VBoxContainer" parent="." unique_id=1852398215]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -220.0
+offset_top = 8.0
+offset_right = -16.0
+offset_bottom = 200.0
+grow_horizontal = 0
+theme_override_constants/separation = 6
+
+[node name="MeleeDamage" type="Button" parent="Shop" unique_id=1266351133]
+custom_minimum_size = Vector2(204, 46)
+layout_mode = 2
+text = "Damage"
+script = ExtResource("2_a2258")
+
+[node name="AttackSpeed" type="Button" parent="Shop" unique_id=1951171660]
+custom_minimum_size = Vector2(204, 46)
+layout_mode = 2
+text = "Attack Speed"
+script = ExtResource("2_a2258")
+kind = 1
+
+[node name="MoveSpeed" type="Button" parent="Shop" unique_id=320932878]
+custom_minimum_size = Vector2(204, 46)
+layout_mode = 2
+text = "Move Speed"
+script = ExtResource("2_a2258")
+kind = 2
+
+[node name="MaxHealth" type="Button" parent="Shop" unique_id=1653018180]
+custom_minimum_size = Vector2(204, 46)
+layout_mode = 2
+text = "Heal"
+script = ExtResource("2_a2258")
+kind = 3
+
+[node name="NexusHeal" type="Button" parent="Shop" unique_id=1653018181]
+custom_minimum_size = Vector2(204, 46)
+layout_mode = 2
+text = "Nexus Heal"
+script = ExtResource("2_a2258")
+kind = 4
+
+[node name="Taunt" type="Button" parent="Shop" unique_id=1653018182]
+custom_minimum_size = Vector2(204, 46)
+layout_mode = 2
+text = "Taunt"
+script = ExtResource("5_itembtn")
+item = 0
+
+[node name="Shockwave" type="Button" parent="Shop" unique_id=1653018183]
+custom_minimum_size = Vector2(204, 46)
+layout_mode = 2
+text = "Shockwave"
+script = ExtResource("5_itembtn")
+item = 1
+
+[node name="PlayerHealth" type="TextureProgressBar" parent="." unique_id=1891851279 node_paths=PackedStringArray("player", "readout")]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -240.0
+offset_top = 8.0
+offset_right = 240.0
+offset_bottom = 36.0
+grow_horizontal = 2
+mouse_filter = 2
+value = 100.0
+texture_under = SubResource("GradientTexture2D_bg")
+texture_progress = SubResource("GradientTexture2D_plyr")
+script = ExtResource("3_1xsix")
+player = NodePath("")
+readout = NodePath("Readout")
+
+[node name="Readout" type="Label" parent="PlayerHealth" unique_id=333481321]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 16
+text = "100 / 100"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NexusHpBar" type="TextureProgressBar" parent="." unique_id=106327439 node_paths=PackedStringArray("nexus", "readout")]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -240.0
+offset_top = 44.0
+offset_right = 240.0
+offset_bottom = 72.0
+grow_horizontal = 2
+mouse_filter = 2
+value = 100.0
+texture_under = SubResource("GradientTexture2D_bg")
+texture_progress = SubResource("GradientTexture2D_nxus")
+script = ExtResource("4_rftc2")
+nexus = NodePath("")
+readout = NodePath("Readout")
+
+[node name="Readout" type="Label" parent="NexusHpBar" unique_id=1907206250]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 16
+text = "1000 / 1000"
+horizontal_alignment = 1
+vertical_alignment = 1
