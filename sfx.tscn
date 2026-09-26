@@ -1,0 +1,12 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Sfx.cs" id="1_sfx"]
+[ext_resource type="AudioStream" path="res://sfx/player_attack.wav" id="2_atk"]
+[ext_resource type="AudioStream" path="res://sfx/player_hurt.wav" id="3_hurt"]
+[ext_resource type="AudioStream" path="res://sfx/nexus_hit.wav" id="4_nexus"]
+
+[node name="Sfx" type="Node"]
+script = ExtResource("1_sfx")
+playerAttack = ExtResource("2_atk")
+playerHurt = ExtResource("3_hurt")
+nexusHit = ExtResource("4_nexus")

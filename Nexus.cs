@@ -3,8 +3,7 @@ using Godot;
 public partial class Nexus : StaticBody2D
 {
 	[Export] HealthComponent health;
-	[Export] Sprite2D        sprite;
-	[Export] AudioStreamPlayer hitSound;
+	[Export] Sprite2D sprite;
 
 
 	public HealthComponent Health => health;
@@ -75,7 +74,7 @@ public partial class Nexus : StaticBody2D
 	void OnDamaged(f64 amount)
 	{
 		_flash = Flash.Hit(this, sprite, (f32)Tuning.HitFlashSeconds);
-		hitSound?.Play();
+		Sfx.Instance?.NexusHit();
 		Numbers.Damage(this, GlobalPosition, amount, new Color(1.0f, 0.6f, 0.3f), 44.0f);
 	}
 }
