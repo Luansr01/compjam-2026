@@ -1,3 +1,7 @@
 [gd_scene format=3 uid="uid://bqnw6kxhrwjq3"]
 
+[ext_resource type="PackedScene" uid="uid://c8fryqcy4j4du" path="res://nexus.tscn" id="1_80nbo"]
+
 [node name="Node2D" type="Node2D" unique_id=584840699]
+
+[node name="Nexus" parent="." unique_id=2091818866 instance=ExtResource("1_80nbo")]

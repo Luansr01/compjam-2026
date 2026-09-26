@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://c8fryqcy4j4du"]
+
+[ext_resource type="Script" uid="uid://ekqsi4u5ote2" path="res://Nexus.cs" id="1_1b4ah"]
+[ext_resource type="PackedScene" uid="uid://b4bcf4endswqh" path="res://health_component.tscn" id="2_7ypn0"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_k4pr2"]
+
+[node name="Nexus" type="StaticBody2D" unique_id=2091818866 node_paths=PackedStringArray("health")]
+script = ExtResource("1_1b4ah")
+health = NodePath("HealthComponent")
+
+[node name="Hitbox" type="CollisionShape2D" parent="." unique_id=923074208]
+shape = SubResource("CircleShape2D_k4pr2")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1159198267]
+
+[node name="HealthComponent" parent="." unique_id=1979101261 instance=ExtResource("2_7ypn0")]
+_maxHealth = 100.0
