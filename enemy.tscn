@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://d2x5sca8opjke"]
+
+[ext_resource type="Script" uid="uid://cwa3mxdi08j5v" path="res://EnemyControl.cs" id="1_iifgy"]
+[ext_resource type="Texture2D" uid="uid://bykjgdrlwx78b" path="res://icon.svg" id="2_epg4t"]
+[ext_resource type="Script" uid="uid://c05vcfxal6chv" path="res://HealthComponent.cs" id="3_3yqyl"]
+[ext_resource type="Script" uid="uid://doj2vhyj1ar3e" path="res://MeleeAttack.cs" id="4_wujgv"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tbrv0"]
+radius = 57.0
+height = 159.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ptxe3"]
+radius = 88.0
+height = 180.0
+
+[node name="Enemy" type="CharacterBody2D" unique_id=273659133 node_paths=PackedStringArray("health", "nav", "meleeAttack", "sprite")]
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("1_iifgy")
+Speed = 200.0
+health = NodePath("Health")
+nav = NodePath("NavigationAgent2D")
+meleeAttack = NodePath("ContactDamage")
+sprite = NodePath("Sprite2D")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1622449188]
+position = Vector2(1.9999962, 0)
+scale = Vector2(0.57812494, 1)
+texture = ExtResource("2_epg4t")
+
+[node name="Health" type="Node2D" parent="." unique_id=1495261551]
+script = ExtResource("3_3yqyl")
+_maxHealth = 100.0
+_currentHealth = 100.0
+team = 1
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1376335239]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=782774805]
+position = Vector2(1, -0.5)
+shape = SubResource("CapsuleShape2D_tbrv0")
+
+[node name="ContactDamage" type="Node2D" parent="." unique_id=498531020 node_paths=PackedStringArray("attackArea")]
+position = Vector2(-1, 0)
+script = ExtResource("4_wujgv")
+attackArea = NodePath("AttackCenter/Area2D")
+damage = 9.0
+sustain = 1.0
+cooldown = 1.0
+team = 1
+
+[node name="AttackCenter" type="Node2D" parent="ContactDamage" unique_id=1263482442]
+
+[node name="Area2D" type="Area2D" parent="ContactDamage/AttackCenter" unique_id=425931017]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ContactDamage/AttackCenter/Area2D" unique_id=1434933863]
+position = Vector2(2, -1)
+shape = SubResource("CapsuleShape2D_ptxe3")

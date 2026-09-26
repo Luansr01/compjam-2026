@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="compjam-2026"
-run/main_scene="res://game.tscn"
+run/main_scene="uid://c75o6gplsy5ss"
 config/features=PackedStringArray("4.7", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 
@@ -23,6 +23,14 @@ Utils="*uid://cggtlowwxerim"
 
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+
+[autoload]
+
+ScoreManager="*res://ScoreManager.cs"
+Tune="*res://tuning.tscn"
+UpgradeManager="*res://UpgradeManager.cs"
+Items="*res://ActiveItemManager.cs"
+Music="*res://music_player.tscn"
 
 [dotnet]
 

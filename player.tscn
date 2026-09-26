@@ -1,0 +1,74 @@
+[gd_scene format=3 uid="uid://bfh7mp5d7m2yr"]
+
+[ext_resource type="Script" uid="uid://bvr2iat0tpqlf" path="res://PlayerControl.cs" id="1_hqtel"]
+[ext_resource type="Texture2D" uid="uid://bykjgdrlwx78b" path="res://icon.svg" id="2_sweqy"]
+[ext_resource type="Script" uid="uid://doj2vhyj1ar3e" path="res://MeleeAttack.cs" id="3_2hs0m"]
+[ext_resource type="Script" uid="uid://c05vcfxal6chv" path="res://HealthComponent.cs" id="4_1jxqw"]
+[ext_resource type="AudioStream" path="res://sfx/player_attack.wav" id="5_atksnd"]
+[ext_resource type="AudioStream" path="res://sfx/player_hurt.wav" id="6_hurtsnd"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tbrv0"]
+radius = 36.0
+height = 129.0
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_c25cv"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_a0x2o"]
+radius = 43.0
+height = 174.0
+
+[node name="Player" type="CharacterBody2D" unique_id=2136554558 node_paths=PackedStringArray("health", "attack", "sprite", "hurtSound")]
+script = ExtResource("1_hqtel")
+health = NodePath("Health")
+attack = NodePath("Meelee Attack")
+sprite = NodePath("Sprite2D")
+hurtSound = NodePath("HurtSound")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1545284809]
+position = Vector2(1.500001, 0)
+scale = Vector2(0.5703125, 1)
+texture = ExtResource("2_sweqy")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1840522595]
+position = Vector2(1, -0.5)
+shape = SubResource("CapsuleShape2D_tbrv0")
+
+[node name="Meelee Attack" type="Node2D" parent="." unique_id=507827420 node_paths=PackedStringArray("attackArea", "attackSprite", "attackSound")]
+position = Vector2(0, 3)
+script = ExtResource("3_2hs0m")
+attackArea = NodePath("AttackCenter/Area2D")
+attackSprite = NodePath("AttackCenter/Sprite2D")
+attackSound = NodePath("SwingSound")
+damage = 20.0
+sustain = 0.5
+cooldown = 0.5
+slowFactor = 0.5
+slowDuration = 1.0
+
+[node name="AttackCenter" type="Node2D" parent="Meelee Attack" unique_id=712738480]
+position = Vector2(73, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="Meelee Attack/AttackCenter" unique_id=1241872976]
+position = Vector2(9, 3.0000002)
+rotation = -3.1415925
+scale = Vector2(69.070015, -155.695)
+texture = SubResource("PlaceholderTexture2D_c25cv")
+
+[node name="Area2D" type="Area2D" parent="Meelee Attack/AttackCenter" unique_id=786518704]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Meelee Attack/AttackCenter/Area2D" unique_id=1980727034]
+position = Vector2(10, 0)
+shape = SubResource("CapsuleShape2D_a0x2o")
+
+[node name="SwingSound" type="AudioStreamPlayer" parent="Meelee Attack" unique_id=1627384541]
+stream = ExtResource("5_atksnd")
+
+[node name="HurtSound" type="AudioStreamPlayer" parent="." unique_id=1627384542]
+stream = ExtResource("6_hurtsnd")
+
+[node name="Health" type="Node2D" parent="." unique_id=76677752]
+script = ExtResource("4_1jxqw")
+_maxHealth = 100.0
+_currentHealth = 100.0
