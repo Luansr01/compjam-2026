@@ -9,6 +9,8 @@ public partial class Nexus : StaticBody2D
 
 	public HealthComponent Health => health;
 
+	public f64 Elapsed => _elapsed;
+
 	public f64 DrainRate => Tuning.DrainStartPerSecond + Tuning.DrainPerMinute * (_elapsed / 60.0);
 
 	public f64 ScoreMultiplier {
@@ -37,9 +39,10 @@ public partial class Nexus : StaticBody2D
 	void OnDie()
 	{
 		PlayerControl player = GetTree().Root.FirstOrDefaultNodeOfType<PlayerControl>();
-		if (player == null || player.Health == null) return;
+		if (player != null && player.Health != null)
+			player.Health.Kill();
 
-		player.Health.Kill();
+		GetTree().Root.FirstOrDefaultNodeOfType<GameOver>()?.Show();
 	}
 
 	public override void _Process(f64 delta)

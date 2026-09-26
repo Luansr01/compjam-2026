@@ -69,6 +69,10 @@ public partial class UpgradeManager : Node
 		? FindNexus()?.Health
 		: FindPlayer()?.Health;
 
+	/// Clear purchased levels. Called before a scene reload, since autoloads
+	/// outlive it and would otherwise carry free upgrades into the next run.
+	public void Reset() => _levels.Clear();
+
 	public void ApplyAll(PlayerControl player)
 	{
 		foreach (UpgradeKind kind in Enum.GetValues<UpgradeKind>()) Apply(kind, player);

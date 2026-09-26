@@ -59,6 +59,17 @@ public partial class ActiveItemManager : Node
 		Detonate();
 	}
 
+	/// Clear uses and any running effects. Called before a scene reload, since
+	/// autoloads outlive it.
+	public void Reset()
+	{
+		_uses.Clear();
+		_taunt            = new(0, 0);
+		_shockwave        = new(0, 0);
+		_detonatePending  = false;
+		changed?.Invoke();
+	}
+
 	public i32 Uses(ActiveItem item) => _uses.GetValueOrDefault(item);
 
 	public f64 Remaining(ActiveItem item) => item switch {

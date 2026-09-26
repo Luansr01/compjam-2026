@@ -40,4 +40,11 @@ public partial class ScoreManager : Node
 		scoreChanged?.Invoke(Score);
 		return true;
 	}
+
+	/// Clear the run. Called before a scene reload, since autoloads outlive it.
+	public void Reset()
+	{
+		Score = 0;
+		scoreChanged?.Invoke(Score);
+	}
 }

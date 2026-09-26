@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://cwrnr8gd2wirk" path="res://NexusHpBar.cs" id="4_rftc2"]
 [ext_resource type="Script" path="res://ItemButton.cs" id="5_itembtn"]
 [ext_resource type="Script" path="res://Vignette.cs" id="6_vign"]
+[ext_resource type="PackedScene" path="res://game_over.tscn" id="7_gameover"]
 
 [sub_resource type="Gradient" id="Gradient_vig"]
 offsets = PackedFloat32Array(0, 0.5, 1)
@@ -60,6 +61,8 @@ texture = SubResource("GradientTexture2D_vig")
 expand_mode = 1
 stretch_mode = 6
 script = ExtResource("6_vign")
+
+[node name="GameOver" parent="." instance=ExtResource("7_gameover")]
 
 [node name="ScoreLabel" type="Label" parent="." unique_id=2014050682]
 offset_left = 16.0
