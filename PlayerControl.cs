@@ -9,7 +9,6 @@ public partial class PlayerControl : CharacterBody2D
 	[Export] AnimatedSprite2D sprite;
 	[Export] f32 Speed = 100.0f;
 
-
 	public f32 SpeedScale = 1.0f;
 
 	public HealthComponent Health => health;
@@ -48,6 +47,14 @@ public partial class PlayerControl : CharacterBody2D
 
 	public override void _Process(double delta)
 	{
+		if(Velocity.X > 0) sprite.FlipH = false;
+		if(Velocity.X < 0) sprite.FlipH = true;
+
+		if(Velocity != Vector2.Zero){
+			if(sprite.Animation != "Walk") sprite.Play("Walk");
+		}else{
+			if(sprite.Animation != "Idle") sprite.Play("Idle");
+		}
 		UpdateDesperation();
 	}
 

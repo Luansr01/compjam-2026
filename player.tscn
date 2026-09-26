@@ -124,15 +124,14 @@ height = 174.0
 script = ExtResource("1_hqtel")
 health = NodePath("Health")
 attack = NodePath("Meelee Attack")
-sprite = NodePath("")
-Speed = 100.0
+sprite = NodePath("AnimatedSprite2D")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1581891824]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_3nqnr")
 animation = &"Idle"
 autoplay = "Idle"
-frame_progress = 0.33126357
+frame_progress = 0.60838646
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1840522595]
 scale = Vector2(0.105, 0.105)
