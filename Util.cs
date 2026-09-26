@@ -55,4 +55,13 @@ public static class Flash {
         tween.TweenProperty(sprite, "modulate", Colors.White, seconds);
         return tween;
     }
+
+    public static Tween Hit(Node owner, AnimatedSprite2D sprite, f32 seconds) {
+        if (sprite == null) return null;
+
+        sprite.Modulate = Hurt;
+        Tween tween = owner.CreateTween();
+        tween.TweenProperty(sprite, "modulate", Colors.White, seconds);
+        return tween;
+    }
 }

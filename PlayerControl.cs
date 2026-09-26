@@ -6,8 +6,8 @@ public partial class PlayerControl : CharacterBody2D
 {
 	[Export] HealthComponent health;
 	[Export] MeleeAttack     attack;
-	[Export] Sprite2D sprite;
-	[Export] f32 Speed = 300.0f;
+	[Export] AnimatedSprite2D sprite;
+	[Export] f32 Speed = 100.0f;
 
 
 	public f32 SpeedScale = 1.0f;
