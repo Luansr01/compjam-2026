@@ -6,8 +6,7 @@ public partial class PlayerControl : CharacterBody2D
 {
 	[Export] HealthComponent health;
 	[Export] MeleeAttack     attack;
-	[Export] Sprite2D        sprite;
-	[Export] AudioStreamPlayer hurtSound;
+	[Export] Sprite2D sprite;
 	[Export] f32 Speed = 300.0f;
 
 
@@ -43,8 +42,8 @@ public partial class PlayerControl : CharacterBody2D
 	void OnDamaged(f64 amount)
 	{
 		_flash = Flash.Hit(this, sprite, (f32)Tuning.HitFlashSeconds);
-		hurtSound?.Play();
 		Numbers.Damage(this, GlobalPosition, amount, new Color(1.0f, 0.45f, 0.45f));
+		Sfx.Instance?.PlayerHurt();
 	}
 
 	public override void _Process(double delta)

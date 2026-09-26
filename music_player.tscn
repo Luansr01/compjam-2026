@@ -1,9 +1,9 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://8l4bu5604whg"]
 
-[ext_resource type="Script" path="res://MusicPlayer.cs" id="1_music"]
-[ext_resource type="AudioStream" path="res://music/main_theme_120.ogg" id="2_theme"]
+[ext_resource type="Script" uid="uid://cugafyybaprj0" path="res://MusicPlayer.cs" id="1_music"]
+[ext_resource type="AudioStream" uid="uid://dywljf0sfcbip" path="res://music/main_theme_120.ogg" id="2_theme"]
 
-[node name="Music" type="AudioStreamPlayer"]
-volume_db = -6.0
-script = ExtResource("1_music")
+[node name="Music" type="AudioStreamPlayer" unique_id=4124052]
 stream = ExtResource("2_theme")
+volume_db = 2.211
+script = ExtResource("1_music")

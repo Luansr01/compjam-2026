@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://bk605h81biakc"]
+
+[ext_resource type="Script" uid="uid://dw6eqlvkb6sx5" path="res://Sfx.cs" id="1_sfx"]
+[ext_resource type="AudioStream" uid="uid://ddvwhjoghj68p" path="res://sfx/player_attack.wav" id="2_atk"]
+[ext_resource type="AudioStream" uid="uid://b21enxjiyq5jf" path="res://sfx/player_hurt.wav" id="3_hurt"]
+[ext_resource type="AudioStream" uid="uid://cgvregvyyw88x" path="res://sfx/nexus_hit.wav" id="4_nexus"]
+
+[node name="Sfx" type="Node" unique_id=1658014211]
+script = ExtResource("1_sfx")
+playerAttack = ExtResource("2_atk")
+playerHurt = ExtResource("3_hurt")
+nexusHit = ExtResource("4_nexus")
+volumeDb = -5.54

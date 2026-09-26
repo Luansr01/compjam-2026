@@ -14,7 +14,9 @@ public partial class MeleeAttack : Node2D
 	[Export] f64      slowFactor;
 	[Export] f64      slowDuration;
 
-	[Export] AudioStreamPlayer attackSound;
+	// Which sound this attack makes. Left as None on the enemies' contact
+	// damage, so only the player's swing is audible.
+	[Export] SfxCue cue = SfxCue.None;
 	
 	public event Area2D.BodyEnteredEventHandler BodyEntered { add => attackArea.BodyEntered += value; remove => attackArea.BodyEntered -= value; } 
 
@@ -80,7 +82,7 @@ public partial class MeleeAttack : Node2D
 		_cooldown.Restart();
 		LookAt(AttackDirection);
 		SetState(true);
-		attackSound?.Play();
+		Sfx.Instance?.Play(cue);
 	}
 
 	void SetState(bool state) {
