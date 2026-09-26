@@ -15,7 +15,7 @@ height = 140.0
 
 [node name="Enemy" type="CharacterBody2D" unique_id=273659133 node_paths=PackedStringArray("health", "nav", "meleeAttack", "sprite")]
 collision_layer = 2
-collision_mask = 2
+collision_mask = 0
 script = ExtResource("1_iifgy")
 Speed = 200.0
 health = NodePath("Health")
