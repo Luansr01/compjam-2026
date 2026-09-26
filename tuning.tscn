@@ -4,6 +4,6 @@
 
 [node name="Tuning" type="Node" unique_id=314367049]
 script = ExtResource("1_tune")
-outerRadius = 2000.0
-innerRadius = 500.0
+outerRadius = 1000.0
+innerRadius = 200.0
 pointsPerKill = 5
