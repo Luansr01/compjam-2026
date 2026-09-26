@@ -9,13 +9,21 @@ public partial class GameOver : CanvasLayer
 	public override void _Ready()
 	{
 		Visible = false;
-		restartButton.Pressed += Restart;
+
+		// Every export is a NodePath the scene has to fill in, and C# cannot catch
+		// a missing one at compile time, so a null here would otherwise take out
+		// _Ready and leave the screen permanently invisible.
+		if (restartButton == null)
+			GD.PushError("GameOver: restartButton is not wired up in game_over.tscn.");
+		else
+			restartButton.Pressed += Restart;
 	}
 
 	/// Named Present rather than Show because CanvasItem already defines Show().
 	public void Present()
 	{
-		scoreLabel.Text = $"Score: {ScoreManager.Instance?.Score ?? 0}";
+		if (scoreLabel != null)
+			scoreLabel.Text = $"Score: {ScoreManager.Instance?.Score ?? 0}";
 
 		Nexus nexus = GetTree().Root.FirstOrDefaultNodeOfType<Nexus>();
 		if (timeLabel != null)
