@@ -42,7 +42,7 @@ public partial class Nexus : StaticBody2D
 		if (player != null && player.Health != null)
 			player.Health.Kill();
 
-		GetTree().Root.FirstOrDefaultNodeOfType<GameOver>()?.Show();
+		GetTree().Root.FirstOrDefaultNodeOfType<GameOver>()?.Present();
 	}
 
 	public override void _Process(f64 delta)

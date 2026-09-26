@@ -12,7 +12,8 @@ public partial class GameOver : CanvasLayer
 		restartButton.Pressed += Restart;
 	}
 
-	public void Show()
+	/// Named Present rather than Show because CanvasItem already defines Show().
+	public void Present()
 	{
 		scoreLabel.Text = $"Score: {ScoreManager.Instance?.Score ?? 0}";
 
