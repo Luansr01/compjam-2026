@@ -1,15 +1,21 @@
 using Godot;
 using System;
 
-using f64 = double;
-
+[GlobalClass]
 public partial class HealthComponent : Node2D
 {
-	[Export] private f64 _maxHealth;
-	[Export] private f64 _currentHealth;
-	private bool _isDead;
+	[Export] f64 _maxHealth;
+	[Export] f64 _currentHealth;
+	[Export] u32 team;
+	
+	public f64 CurrentHealth => _currentHealth;
+	public f64 MaxHealth => _maxHealth;
 
-	public Action die;
+	public u32 Team => team;
+	public bool IsDead => _isDead;
+	public event Action die;
+	
+	private bool _isDead;
 
 	public override void _Ready()
 	{
@@ -19,7 +25,6 @@ public partial class HealthComponent : Node2D
 	}
 
 	public void TakeDamage(f64 damage) {
-		GD.Print($"Imma bout to take in {damage} dmg.");
 		this._currentHealth -= damage;
 		if(this._currentHealth < 0) {
 			this._currentHealth = 0;
@@ -27,13 +32,6 @@ public partial class HealthComponent : Node2D
 		}
 	}
 
-	public f64 GetHealth(){
-		return this._currentHealth;
-	}
-
-	public f64 GetMaxHealth(){
-		return this._maxHealth;
-	}
 
 	public void SetMaxHealth(f64 newHealth){
 		this._maxHealth = (f64) newHealth;

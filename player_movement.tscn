@@ -1,119 +1,58 @@
 [gd_scene format=3 uid="uid://c75o6gplsy5ss"]
 
-[ext_resource type="Script" uid="uid://bvr2iat0tpqlf" path="res://PlayerControl.cs" id="1_342bk"]
-[ext_resource type="Script" uid="uid://c05vcfxal6chv" path="res://HealthComponent.cs" id="1_c25cv"]
-[ext_resource type="Texture2D" uid="uid://bykjgdrlwx78b" path="res://icon.svg" id="2_b052v"]
-[ext_resource type="Script" uid="uid://doj2vhyj1ar3e" path="res://MeleeAttack.cs" id="3_c25cv"]
-[ext_resource type="Script" uid="uid://cwa3mxdi08j5v" path="res://EnemyControl.cs" id="5_ptxe3"]
+[ext_resource type="PackedScene" uid="uid://bfh7mp5d7m2yr" path="res://player.tscn" id="1_b052v"]
+[ext_resource type="Script" uid="uid://ske0gsfwb428" path="res://PlayerHpBar.cs" id="2_c25cv"]
+[ext_resource type="PackedScene" uid="uid://c8fryqcy4j4du" path="res://nexus.tscn" id="4_ptxe3"]
+[ext_resource type="Script" uid="uid://cwrnr8gd2wirk" path="res://NexusHpBar.cs" id="5_ptxe3"]
+[ext_resource type="PackedScene" uid="uid://74yl3oevo5w4" path="res://spawner.tscn" id="6_tbrv0"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tbrv0"]
-radius = 36.0
-height = 129.0
-
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_c25cv"]
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_a0x2o"]
-radius = 43.0
-height = 174.0
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ptxe3"]
-radius = 39.0
-height = 132.0
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_c25cv"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_a0x2o"]
 vertices = PackedVector2Array(1383.3516, 850.0078, -1353.3906, 853.97656, -1259.5625, -748.1094, 1442.6172, -781.8594)
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
 outlines = Array[PackedVector2Array]([PackedVector2Array(-1269, -758, -1364, 864, 1393, 860, 1453, -792)])
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_b052v"]
+
 [node name="Test" type="Node2D" unique_id=783497710]
 
-[node name="Player" type="CharacterBody2D" parent="." unique_id=528738402 node_paths=PackedStringArray("attack")]
+[node name="PlayerHealth" type="TextureProgressBar" parent="." unique_id=379405793 node_paths=PackedStringArray("player")]
+offset_left = -428.0
+offset_top = -639.0
+offset_right = 84.0
+offset_bottom = -127.0
+scale = Vector2(1.6926441, 0.08093823)
+value = 100.0
+texture_progress = SubResource("NoiseTexture2D_c25cv")
+script = ExtResource("2_c25cv")
+player = NodePath("../Player")
+
+[node name="Player" parent="." unique_id=2136554558 instance=ExtResource("1_b052v")]
 position = Vector2(100, 145)
-script = ExtResource("1_342bk")
-attack = NodePath("Meelee Attack")
-
-[node name="Sprite2D" type="Sprite2D" parent="Player" unique_id=1519313309]
-position = Vector2(1.500001, 0)
-scale = Vector2(0.5703125, 1)
-texture = ExtResource("2_b052v")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=1419451187]
-position = Vector2(1, -0.5)
-shape = SubResource("CapsuleShape2D_tbrv0")
-
-[node name="Meelee Attack" type="Node2D" parent="Player" unique_id=461280718 node_paths=PackedStringArray("attackArea", "attackSprite")]
-script = ExtResource("3_c25cv")
-attackArea = NodePath("AttackCenter/Area2D")
-attackSprite = NodePath("AttackCenter/Sprite2D")
-damage = 10.0
-sustain = 0.1
-cooldown = 1.0
-
-[node name="AttackCenter" type="Node2D" parent="Player/Meelee Attack" unique_id=756475204]
-position = Vector2(70, 0)
-
-[node name="Sprite2D" type="Sprite2D" parent="Player/Meelee Attack/AttackCenter" unique_id=603385301]
-position = Vector2(9, 3.0000002)
-rotation = -3.1415925
-scale = Vector2(69.070015, -155.695)
-texture = SubResource("PlaceholderTexture2D_c25cv")
-
-[node name="Area2D" type="Area2D" parent="Player/Meelee Attack/AttackCenter" unique_id=1052382982]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/Meelee Attack/AttackCenter/Area2D" unique_id=1131315406]
-position = Vector2(10, 0)
-shape = SubResource("CapsuleShape2D_a0x2o")
-
-[node name="Health" type="Node2D" parent="Player" unique_id=341151933]
-script = ExtResource("1_c25cv")
-_maxHealth = 100.0
-_currentHealth = 100.0
-
-[node name="Enemy" type="CharacterBody2D" parent="." unique_id=1288794757 node_paths=PackedStringArray("health", "root", "goal", "nav", "meleeAttack")]
-position = Vector2(465, 185)
-collision_layer = 2
-collision_mask = 2
-script = ExtResource("5_ptxe3")
-health = NodePath("Health")
-root = NodePath(".")
-goal = NodePath("../Player")
-nav = NodePath("NavigationAgent2D")
-meleeAttack = NodePath("ContactDamage")
-
-[node name="Sprite2D" type="Sprite2D" parent="Enemy" unique_id=1991415531]
-position = Vector2(1.9999962, 0)
-scale = Vector2(0.57812494, 1)
-texture = ExtResource("2_b052v")
-
-[node name="Health" type="Node2D" parent="Enemy" unique_id=1256833266]
-script = ExtResource("1_c25cv")
-_maxHealth = 100.0
-_currentHealth = 100.0
-
-[node name="NavigationAgent2D" type="NavigationAgent2D" parent="Enemy" unique_id=1664817107]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy" unique_id=584438471]
-position = Vector2(1, -0.5)
-shape = SubResource("CapsuleShape2D_tbrv0")
-
-[node name="ContactDamage" type="Node2D" parent="Enemy" unique_id=116762136 node_paths=PackedStringArray("attackArea")]
-script = ExtResource("3_c25cv")
-attackArea = NodePath("AttackCenter/Area2D")
-damage = 10.0
-sustain = 0.1
-cooldown = 1.0
-
-[node name="AttackCenter" type="Node2D" parent="Enemy/ContactDamage" unique_id=237382065]
-
-[node name="Area2D" type="Area2D" parent="Enemy/ContactDamage/AttackCenter" unique_id=1247409656]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy/ContactDamage/AttackCenter/Area2D" unique_id=56359798]
-position = Vector2(2, -1)
-shape = SubResource("CapsuleShape2D_ptxe3")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1702358564]
 zoom = Vector2(0.505, 0.505)
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=228168978]
+visible = false
 position = Vector2(19, -100)
 navigation_polygon = SubResource("NavigationPolygon_a0x2o")
+
+[node name="Spawner" parent="." unique_id=1068368533 instance=ExtResource("6_tbrv0")]
+position = Vector2(1, -4)
+circle = SubResource("CircleShape2D_b052v")
+
+[node name="Nexus" parent="." unique_id=1227742193 instance=ExtResource("4_ptxe3")]
+position = Vector2(596, 300)
+
+[node name="NexusHpBar" type="TextureProgressBar" parent="." unique_id=401726309 node_paths=PackedStringArray("nexus")]
+offset_left = -405.99997
+offset_top = 574.00006
+offset_right = 106.00003
+offset_bottom = 1086.0
+scale = Vector2(1.7095566, 0.13721137)
+value = 100.0
+texture_progress = SubResource("NoiseTexture2D_c25cv")
+script = ExtResource("5_ptxe3")
+nexus = NodePath("../Nexus")

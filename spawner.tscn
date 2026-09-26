@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://74yl3oevo5w4"]
+
+[ext_resource type="Script" uid="uid://c73morkt231ym" path="res://Spawn.cs" id="1_ttk4a"]
+[ext_resource type="PackedScene" uid="uid://d2x5sca8opjke" path="res://enemy.tscn" id="2_mcln3"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ttk4a"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_0c7hy"]
+radius = 500.0
+
+[node name="Spawner" type="Node2D" unique_id=1068368533]
+script = ExtResource("1_ttk4a")
+node = ExtResource("2_mcln3")
+circle = SubResource("CircleShape2D_ttk4a")
+spawnRate = 5.0
+spawnCap = 5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=696496765]
+shape = SubResource("CircleShape2D_0c7hy")

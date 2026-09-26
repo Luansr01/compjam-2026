@@ -1,9 +1,6 @@
 using Godot;
 using System;
 
-using f64 = double;
-using f32 = float;
-
 [GlobalClass]
 public partial class MeleeAttack : Node2D
 {
@@ -12,6 +9,7 @@ public partial class MeleeAttack : Node2D
 	[Export] f64      damage;
 	[Export] f64      sustain;
 	[Export] f64      cooldown;
+	[Export] u32      team;
 	
 	public event Area2D.BodyEnteredEventHandler BodyEntered { add => attackArea.BodyEntered += value; remove => attackArea.BodyEntered -= value; } 
 
@@ -27,7 +25,7 @@ public partial class MeleeAttack : Node2D
 
 	public override void _Ready()
 	{
-		attackArea.BodyEntered += OnBodyEnter;
+		BodyEntered += OnBodyEnter;
 		if (attackSprite != null) attackSprite.Visible    = false;
 		_enabled                = false;
 		_sustain                = new(0, sustain);
@@ -72,10 +70,12 @@ public partial class MeleeAttack : Node2D
 	}
 
 	void OnBodyEnter(Node2D n) {
+		GD.Print($"Hey a {n.Name}");
 		if (!_enabled) return;
 		
-		GD.Print(n.Name);
-		if (n.FirstOrDefaultNodeOfType<HealthComponent>() is var health) {
+		GD.Print($"Hiting {n.Name}");
+		if (n.FirstOrDefaultNodeOfType<HealthComponent>() is var health && health.Team != team) {
+			GD.Print($"Hiting {n.Name} for {damage}");
 			health.TakeDamage(damage);
 		} 
 	}

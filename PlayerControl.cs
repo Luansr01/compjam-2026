@@ -1,17 +1,28 @@
 using Godot;
 using System;
 
-using f64 = double;
-using f32 = float;
-
+[GlobalClass]
 public partial class PlayerControl : CharacterBody2D
 {
 	[Export] HealthComponent health;
-	[Export] MeleeAttack attack;
+	[Export] MeleeAttack     attack;
+	[Export] Sprite2D        sprite;
 	[Export] f32 Speed = 300.0f;
+
+	public HealthComponent Health => health;
+
+	public override void _Ready() {
+		health.die += OnDie; 
+	}
+	
+	void OnDie() {
+		if (sprite != null) sprite.Visible = false;
+	}
 
 	public override void _PhysicsProcess(f64 delta)
 	{
+		if (health.IsDead) return;
+
 		attack.AttackDirection = GetGlobalMousePosition();
 		Vector2 velocity = Velocity;
 
@@ -33,6 +44,7 @@ public partial class PlayerControl : CharacterBody2D
 	
 	public override void _Input(InputEvent e) 
 	{
+		if (health.IsDead) return;
 		if (e.IsActionPressed("Interact")) {
 			attack.Trigger();
 		}

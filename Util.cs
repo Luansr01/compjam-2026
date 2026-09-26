@@ -21,3 +21,11 @@ public static class Util {
         return null; 
     }
 }
+
+public static class Random {
+     public static Vector2 SampleSphere(f32 r) {
+        r *= GD.Randf();
+        f32 theta = GD.Randf()*Mathf.Pi;
+        return new Vector2(r*Mathf.Cos(theta), r*Mathf.Sin(theta));
+    }
+}
