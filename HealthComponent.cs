@@ -1,10 +1,12 @@
 using Godot;
 using System;
 
+using f64 = double;
+
 public partial class HealthComponent : Node2D
 {
-	[Export] private int _maxHealth;
-	[Export] private int _currentHealth;
+	[Export] private f64 _maxHealth;
+	[Export] private f64 _currentHealth;
 	private bool _isDead;
 
 	public Action die;
@@ -16,7 +18,7 @@ public partial class HealthComponent : Node2D
 		this.die += () => _isDead = true;
 	}
 
-	public void TakeDamage(int damage){
+	public void TakeDamage(f64 damage){
 		this._currentHealth -= damage;
 		if(this._currentHealth < 0) {
 			this._currentHealth = 0;
@@ -24,15 +26,15 @@ public partial class HealthComponent : Node2D
 		}
 	}
 
-	public int GetHealth(){
+	public f64 GetHealth(){
 		return this._currentHealth;
 	}
 
-	public int GetMaxHealth(){
+	public f64 GetMaxHealth(){
 		return this._maxHealth;
 	}
 
-	public void SetMaxHealth(uint newHealth){
-		this._maxHealth = (int) newHealth;
+	public void SetMaxHealth(f64 newHealth){
+		this._maxHealth = (f64) newHealth;
 	}
 }
