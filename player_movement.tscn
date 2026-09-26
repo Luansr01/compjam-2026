@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://c75o6gplsy5ss"]
+
+[ext_resource type="Script" uid="uid://cnpr5g5jry2r0" path="res://PlayerMovement.cs" id="1_k0mwo"]
+[ext_resource type="Texture2D" uid="uid://bykjgdrlwx78b" path="res://icon.svg" id="2_b052v"]
+[ext_resource type="Script" uid="uid://doj2vhyj1ar3e" path="res://MeleeAttack.cs" id="3_c25cv"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_a0x2o"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_a0x2o"]
+radius = 23.0
+height = 170.0
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_c25cv"]
+
+[node name="Player" type="Node2D" unique_id=783497710]
+
+[node name="Body" type="CharacterBody2D" parent="." unique_id=528738402]
+script = ExtResource("1_k0mwo")
+
+[node name="Sprite2D" type="Sprite2D" parent="Body" unique_id=1519313309]
+texture = ExtResource("2_b052v")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body" unique_id=1419451187]
+shape = SubResource("RectangleShape2D_a0x2o")
+
+[node name="Meelee Attack" type="Node2D" parent="Body" unique_id=461280718 node_paths=PackedStringArray("attackArea", "attackSprite")]
+position = Vector2(87, -1)
+script = ExtResource("3_c25cv")
+attackArea = NodePath("Area2D")
+attackSprite = NodePath("Sprite2D")
+sustain = 1.0
+
+[node name="Area2D" type="Area2D" parent="Body/Meelee Attack" unique_id=1052382982]
+process_mode = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/Meelee Attack/Area2D" unique_id=1131315406]
+shape = SubResource("CapsuleShape2D_a0x2o")
+
+[node name="Sprite2D" type="Sprite2D" parent="Body/Meelee Attack" unique_id=603385301]
+visible = false
+position = Vector2(0, 4.29)
+rotation = -3.1415925
+scale = Vector2(41.2312, -155.13023)
+texture = SubResource("PlaceholderTexture2D_c25cv")
