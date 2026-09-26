@@ -1,7 +1,5 @@
 using Godot;
 
-using f64 = double;
-
 public partial class Nexus : StaticBody2D
 {
 	[Export] HealthComponent health;

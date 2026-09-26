@@ -58,7 +58,7 @@ public partial class EnemyControl : CharacterBody2D
 		AddToGroup(Group);
 
 		goal        = GetTree().Root.FirstOrDefaultNodeOfType<Nexus>();
-		health.die += OnDie;
+		health.Die += OnDie;
 		health.damaged += OnDamaged;
 		health.overkilled += OnOverkilled;
 		nav.TargetPosition = goal.GlobalPosition;

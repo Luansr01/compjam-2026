@@ -19,7 +19,7 @@ public partial class HealthComponent : Node2D
 
 	public event Action<f64> damaged;
 
-	/// Raised just before die, with the damage that spilled past zero. A blow that
+	/// Raised just before Die, with the damage that spilled past zero. A blow that
 	/// lands exactly on the target's remaining health is not an overkill.
 	public event Action<f64> overkilled;
 

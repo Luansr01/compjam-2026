@@ -16,7 +16,7 @@ outlines = Array[PackedVector2Array]([PackedVector2Array(-1269, -758, -1364, 864
 position = Vector2(100, 145)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1702358564]
-zoom = Vector2(0.505, 0.505)
+zoom = Vector2(3, 3)
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=228168978]
 visible = false

@@ -30,7 +30,7 @@ public partial class PlayerControl : CharacterBody2D
 	Tween _flash;
 
 	public override void _Ready() {
-		health.die   += OnDie;
+		health.Die   += OnDie;
 		health.damaged += OnDamaged;
 		UpgradeManager.Instance?.ApplyAll(this);
 	}
