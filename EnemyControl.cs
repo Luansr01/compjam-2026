@@ -40,11 +40,18 @@ public partial class EnemyControl : CharacterBody2D
 
 	void OnDamaged(f64 amount)
 	{
+		_lastDamage = amount;
 		_flash = Flash.Hit(this, sprite, (f32)Tuning.HitFlashSeconds);
 		Numbers.Damage(this, GlobalPosition, amount, new Color(1.0f, 0.95f, 0.6f), 30.0f);
 	}
 
 	public const string Group = "enemy";
+
+	const int MaxChainDepth = 8;
+	static int _chainDepth;
+
+	bool _overkilled;
+	f64 _lastDamage;
 
 	public override void _Ready()
 	{
@@ -60,15 +67,29 @@ public partial class EnemyControl : CharacterBody2D
 		meleeAttack.BodyEntered += OnBodyEnter;
 	}
 
-	/// A blow that lands past zero detonates the enemy, damaging and shoving
-	/// everything else nearby. Those kills raise their own overkill in turn, so
-	/// a packed wave chains. Uses the group rather than a physics query because
-	/// this fires from inside a BodyEntered callback, where querying the
-	/// physics space mid-flush is unsafe.
-	void OnOverkilled(f64 excess)
+	void OnOverkilled(f64 excess) => _overkilled = true;
+
+	/// The killing blow is judged here rather than inside the overkill callback,
+	/// so a kill that lands exactly on zero can still qualify through
+	/// ExplosionMinShare, and so the blast is emitted once per death rather than
+	/// re-entered from inside a damage call.
+	bool ShouldExplode()
 	{
+		if (_overkilled) return true;
+
+		return Tuning.ExplosionMinShare > 0.0
+			&& _lastDamage >= Tuning.ExplosionMinShare * health.MaxHealth;
+	}
+
+	/// Damages and shoves everything nearby. Those kills can detonate in turn, so
+	/// a packed wave chains; _chainDepth bounds that, since the nesting is
+	/// synchronous and each level copies the group out of the tree.
+	void Detonate()
+	{
+		if (_chainDepth >= MaxChainDepth) return;
+		_chainDepth++;
+
 		f64 radius = Tuning.ExplosionRadius;
-		f64 reach  = Tuning.ExplosionMinShare * health.MaxHealth;
 
 		foreach (Node node in GetTree().GetNodesInGroup(Group))
 		{
@@ -77,10 +98,6 @@ public partial class EnemyControl : CharacterBody2D
 			if (!GodotObject.IsInstanceValid(other)) continue;
 			if (other.GlobalPosition.DistanceTo(GlobalPosition) > radius) continue;
 
-			// A killing blow already past zero counts, otherwise only one big
-			// enough to spill meaningfully.
-			if (excess < 0.0 && Tuning.ExplosionMinShare <= 0.0) continue;
-
 			other.health.TakeDamage(Tuning.ExplosionDamage);
 			other.ApplySlow(Tuning.ExplosionSlowFactor, Tuning.ExplosionSlowDuration);
 
@@ -88,6 +105,8 @@ public partial class EnemyControl : CharacterBody2D
 			if (away.LengthSquared() > 0.01f)
 				other.ApplyKnockback(away.Normalized() * (f32)Tuning.ExplosionKnockback);
 		}
+
+		_chainDepth--;
 
 		Pulse burst = new()
 		{
@@ -189,6 +208,8 @@ public partial class EnemyControl : CharacterBody2D
 
 	void OnDie()
 	{
+		if (ShouldExplode()) Detonate();
+
 		ScoreManager.Instance?.AddKill(KillDifficulty * NexusScoreMultiplier());
 		QueueFree();
 	}
