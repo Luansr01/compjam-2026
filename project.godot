@@ -24,6 +24,8 @@ window/stretch/aspect="expand"
 
 ScoreManager="*res://ScoreManager.cs"
 UpgradeManager="*res://UpgradeManager.cs"
+Items="*res://ActiveItemManager.cs"
+Music="*res://music_player.tscn"
 
 [dotnet]
 
