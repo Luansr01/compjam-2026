@@ -154,7 +154,7 @@ public partial class Tuning : Node
 	public static f64 DesperationThreshold => Instance?.desperationThreshold ?? 0.4;
 	public static f64 DesperationBonus => Instance?.desperationBonus ?? 0.6;
 	public static f64 DesperationDamageFloor => Instance?.desperationDamageFloor ?? 0.3;
-	public static f64 HitFlashSeconds => Instance?.hitFlashSeconds ?? 0.15;
+	public static f64 HitFlashSeconds => Instance?.hitFlashSeconds ?? 0.3;
 
 	public static f64 ExplosionRadius => Instance?.explosionRadius ?? 220.0;
 	public static f64 ExplosionDamage => Instance?.explosionDamage ?? 60.0;

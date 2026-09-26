@@ -1,11 +1,21 @@
 [gd_scene format=3 uid="uid://bfh7mp5d7m2yr"]
 
 [ext_resource type="Script" uid="uid://bvr2iat0tpqlf" path="res://PlayerControl.cs" id="1_hqtel"]
+[ext_resource type="Shader" uid="uid://dskda4ct1t6a0" path="res://shaders/outline.gdshader" id="2_1jxqw"]
 [ext_resource type="Texture2D" uid="uid://cb1txawo5qk1d" path="res://sprites/Player_Idle.png" id="2_hqtel"]
 [ext_resource type="Texture2D" uid="uid://0l4h1ap545tg" path="res://sprites/Player_Walk.png" id="3_1jxqw"]
 [ext_resource type="Script" uid="uid://doj2vhyj1ar3e" path="res://MeleeAttack.cs" id="3_2hs0m"]
 [ext_resource type="Script" uid="uid://c05vcfxal6chv" path="res://HealthComponent.cs" id="4_1jxqw"]
 [ext_resource type="Texture2D" uid="uid://doyn1n4itch6r" path="res://sprites/attack.png" id="4_sweqy"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tbrv0"]
+shader = ExtResource("2_1jxqw")
+shader_parameter/color = Color(0.9647059, 0.8039216, 0.14901961, 1)
+shader_parameter/width = 0.4510000214225
+shader_parameter/pattern = 0
+shader_parameter/inside = true
+shader_parameter/add_margins = false
+shader_parameter/number_of_images = Vector2(1, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_b26j0"]
 atlas = ExtResource("2_hqtel")
@@ -128,10 +138,11 @@ sprite = NodePath("AnimatedSprite2D")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1581891824]
 texture_filter = 1
+material = SubResource("ShaderMaterial_tbrv0")
 sprite_frames = SubResource("SpriteFrames_3nqnr")
 animation = &"Idle"
 autoplay = "Idle"
-frame_progress = 0.60838646
+frame_progress = 0.015887415
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1840522595]
 scale = Vector2(0.105, 0.105)

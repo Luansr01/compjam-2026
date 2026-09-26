@@ -18,7 +18,7 @@ public partial class EnemyControl : CharacterBody2D
 	[Export] HealthComponent health;
 	[Export] NavigationAgent2D nav;
 	[Export] MeleeAttack meleeAttack;
-	[Export] Sprite2D sprite;
+	[Export] AnimatedSprite2D sprite;
 
 	[Export] f64 KillDifficulty = 1.0;
 
