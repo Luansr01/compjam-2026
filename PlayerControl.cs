@@ -36,6 +36,7 @@ public partial class PlayerControl : CharacterBody2D
 	
 	void OnDie() {
 		if (sprite != null) sprite.Visible = false;
+		GetTree().Root.FirstOrDefaultNodeOfType<GameOver>()?.Present();
 	}
 
 	void OnDamaged(f64 amount)

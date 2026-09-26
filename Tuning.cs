@@ -5,8 +5,8 @@ public partial class Tuning : Node
 	public static Tuning Instance { get; private set; }
 
 	[ExportGroup("Spawning")]
-	[Export] f64 outerRadius = 500.0;
-	[Export] f64 innerRadius = 300.0;
+	[Export] f64 outerRadius = 200.0;
+	[Export] f64 innerRadius = 100.0;
 	[Export] f64 spawnRate = 5.0;
 	[Export] i32 spawnCap = 5;
 

@@ -1,15 +1,15 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://cjs3dtlqj2008"]
 
-[ext_resource type="Script" path="res://GameOver.cs" id="1_go"]
+[ext_resource type="Script" uid="uid://d2x5dnhyh8bg7" path="res://GameOver.cs" id="1_go"]
 
-[node name="GameOver" type="CanvasLayer" node_paths=PackedStringArray("scoreLabel", "timeLabel", "restartButton")]
+[node name="GameOver" type="CanvasLayer" unique_id=236859289 node_paths=PackedStringArray("scoreLabel", "timeLabel", "restartButton")]
 layer = 10
 script = ExtResource("1_go")
 scoreLabel = NodePath("Score")
 timeLabel = NodePath("Time")
 restartButton = NodePath("Restart")
 
-[node name="Dim" type="ColorRect" parent="."]
+[node name="Dim" type="ColorRect" parent="." unique_id=513952326]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -18,7 +18,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.04, 0.04, 0.06, 0.82)
 
-[node name="Title" type="Label" parent="."]
+[node name="Title" type="Label" parent="." unique_id=354485535]
 anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 120.0
@@ -31,7 +31,7 @@ text = "GAME OVER"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Score" type="Label" parent="."]
+[node name="Score" type="Label" parent="." unique_id=1693557013]
 unique_name_in_owner = true
 anchors_preset = 10
 anchor_right = 1.0
@@ -45,7 +45,7 @@ text = "Score: 0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Time" type="Label" parent="."]
+[node name="Time" type="Label" parent="." unique_id=573170692]
 unique_name_in_owner = true
 anchors_preset = 10
 anchor_right = 1.0
@@ -55,19 +55,18 @@ grow_horizontal = 2
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 6
 theme_override_font_sizes/font_size = 24
-text = ""
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Restart" type="Button" parent="."]
+[node name="Restart" type="Button" parent="." unique_id=448634019]
 unique_name_in_owner = true
 process_mode = 3
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 476.0
-offset_top = 270.0
-offset_right = 676.0
-offset_bottom = 330.0
+offset_left = 224.0
+offset_top = 461.0
+offset_right = -227.0
+offset_bottom = 521.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 26
 text = "Restart"
