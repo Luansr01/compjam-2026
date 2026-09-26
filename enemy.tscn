@@ -1,17 +1,53 @@
 [gd_scene format=3 uid="uid://d2x5sca8opjke"]
 
 [ext_resource type="Script" uid="uid://cwa3mxdi08j5v" path="res://EnemyControl.cs" id="1_iifgy"]
-[ext_resource type="Texture2D" uid="uid://bykjgdrlwx78b" path="res://icon.svg" id="2_epg4t"]
+[ext_resource type="Texture2D" uid="uid://dnnyntujg7gbv" path="res://sprites/Enemy.png" id="2_iifgy"]
 [ext_resource type="Script" uid="uid://c05vcfxal6chv" path="res://HealthComponent.cs" id="3_3yqyl"]
 [ext_resource type="Script" uid="uid://doj2vhyj1ar3e" path="res://MeleeAttack.cs" id="4_wujgv"]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_iifgy"]
+atlas = ExtResource("2_iifgy")
+region = Rect2(0, 0, 15, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_epg4t"]
+atlas = ExtResource("2_iifgy")
+region = Rect2(15, 0, 15, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3yqyl"]
+atlas = ExtResource("2_iifgy")
+region = Rect2(30, 0, 15, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wujgv"]
+atlas = ExtResource("2_iifgy")
+region = Rect2(46, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_a0x2o"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iifgy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_epg4t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3yqyl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wujgv")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tbrv0"]
-radius = 57.0
-height = 159.0
+radius = 5.0
+height = 15.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ptxe3"]
-radius = 88.0
-height = 180.0
+radius = 4.0
+height = 12.0
 
 [node name="Enemy" type="CharacterBody2D" unique_id=273659133 node_paths=PackedStringArray("health", "nav", "meleeAttack", "sprite")]
 collision_layer = 2
@@ -21,12 +57,13 @@ Speed = 200.0
 health = NodePath("Health")
 nav = NodePath("NavigationAgent2D")
 meleeAttack = NodePath("ContactDamage")
-sprite = NodePath("Sprite2D")
+sprite = NodePath("")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1622449188]
+[node name="Sprite2D" type="AnimatedSprite2D" parent="." unique_id=1689654835]
+texture_filter = 1
 position = Vector2(1.9999962, 0)
 scale = Vector2(0.57812494, 1)
-texture = ExtResource("2_epg4t")
+sprite_frames = SubResource("SpriteFrames_a0x2o")
 
 [node name="Health" type="Node2D" parent="." unique_id=1495261551]
 script = ExtResource("3_3yqyl")
