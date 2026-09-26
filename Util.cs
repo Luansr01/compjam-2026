@@ -39,7 +39,17 @@ public static class Numbers {
 		if (host == null || !GodotObject.IsInstanceValid(host)) return;
 
 		DamageText text = new();
-		host.GetTree().Root.AddChild(text);
+		CanvasLayer layer = host.GetTree().Root.FirstOrDefaultNodeOfType<CanvasLayer>();
+		if (layer != null)
+		{
+			layer.AddChild(text);
+			// Convert world position to screen space for the CanvasLayer
+			at = host.GetTree().Root.GetCanvasTransform() * at;
+		}
+		else
+		{
+			host.GetTree().Root.AddChild(text);
+		}
 		text.Play(at, new Vector2((GD.Randf() - 0.5f) * 60.0f, -90.0f), amount, tint, size, seconds);
 	}
 }
