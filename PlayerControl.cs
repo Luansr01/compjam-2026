@@ -1,12 +1,16 @@
 using Godot;
 using System;
 
-public partial class PlayerMovement : CharacterBody2D
-{
-	public const float Speed = 300.0f;
-	public const float JumpVelocity = -400.0f;
+using f64 = double;
+using f32 = float;
 
-	public override void _PhysicsProcess(double delta)
+public partial class PlayerControl : CharacterBody2D
+{
+	[Export] HealthComponent health;
+	[Export] MeleeAttack attack;
+	[Export] f32 Speed = 300.0f;
+
+	public override void _PhysicsProcess(f64 delta)
 	{
 		Vector2 velocity = Velocity;
 
@@ -24,5 +28,12 @@ public partial class PlayerMovement : CharacterBody2D
 
 		Velocity = velocity;
 		MoveAndSlide();
+	}
+	
+	public override void _Input(InputEvent e) 
+	{
+		if (e.IsActionPressed("Interact")) {
+			attack.Trigger();
+		}
 	}
 }

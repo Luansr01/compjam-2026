@@ -1,10 +1,13 @@
 [gd_scene format=3 uid="uid://c75o6gplsy5ss"]
 
-[ext_resource type="Script" uid="uid://cnpr5g5jry2r0" path="res://PlayerMovement.cs" id="1_k0mwo"]
+[ext_resource type="Script" uid="uid://bvr2iat0tpqlf" path="res://PlayerControl.cs" id="1_342bk"]
+[ext_resource type="Script" uid="uid://c05vcfxal6chv" path="res://HealthComponent.cs" id="1_c25cv"]
 [ext_resource type="Texture2D" uid="uid://bykjgdrlwx78b" path="res://icon.svg" id="2_b052v"]
 [ext_resource type="Script" uid="uid://doj2vhyj1ar3e" path="res://MeleeAttack.cs" id="3_c25cv"]
+[ext_resource type="Script" uid="uid://cwa3mxdi08j5v" path="res://EnemyControl.cs" id="5_ptxe3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_a0x2o"]
+size = Vector2(124, 123)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_a0x2o"]
 radius = 23.0
@@ -12,33 +15,78 @@ height = 170.0
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_c25cv"]
 
-[node name="Player" type="Node2D" unique_id=783497710]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ptxe3"]
+size = Vector2(124, 123)
 
-[node name="Body" type="CharacterBody2D" parent="." unique_id=528738402]
-script = ExtResource("1_k0mwo")
+[node name="Test" type="Node2D" unique_id=783497710]
 
-[node name="Sprite2D" type="Sprite2D" parent="Body" unique_id=1519313309]
+[node name="Player" type="CharacterBody2D" parent="." unique_id=528738402 node_paths=PackedStringArray("attack")]
+position = Vector2(100, 145)
+script = ExtResource("1_342bk")
+attack = NodePath("Meelee Attack")
+
+[node name="Sprite2D" type="Sprite2D" parent="Player" unique_id=1519313309]
 texture = ExtResource("2_b052v")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Body" unique_id=1419451187]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=1419451187]
+position = Vector2(1, -0.5)
 shape = SubResource("RectangleShape2D_a0x2o")
 
-[node name="Meelee Attack" type="Node2D" parent="Body" unique_id=461280718 node_paths=PackedStringArray("attackArea", "attackSprite")]
-position = Vector2(87, -1)
+[node name="Meelee Attack" type="Node2D" parent="Player" unique_id=461280718 node_paths=PackedStringArray("attackArea", "attackSprite")]
+position = Vector2(93, -3)
 script = ExtResource("3_c25cv")
 attackArea = NodePath("Area2D")
 attackSprite = NodePath("Sprite2D")
-sustain = 1.0
+damage = 10.0
+sustain = 0.515
 
-[node name="Area2D" type="Area2D" parent="Body/Meelee Attack" unique_id=1052382982]
-process_mode = 4
+[node name="Area2D" type="Area2D" parent="Player/Meelee Attack" unique_id=1052382982]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/Meelee Attack/Area2D" unique_id=1131315406]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/Meelee Attack/Area2D" unique_id=1131315406]
 shape = SubResource("CapsuleShape2D_a0x2o")
 
-[node name="Sprite2D" type="Sprite2D" parent="Body/Meelee Attack" unique_id=603385301]
-visible = false
-position = Vector2(0, 4.29)
+[node name="Sprite2D" type="Sprite2D" parent="Player/Meelee Attack" unique_id=603385301]
 rotation = -3.1415925
 scale = Vector2(41.2312, -155.13023)
 texture = SubResource("PlaceholderTexture2D_c25cv")
+
+[node name="Health" type="Node2D" parent="Player" unique_id=341151933]
+script = ExtResource("1_c25cv")
+_maxHealth = 100.0
+_currentHealth = 100.0
+
+[node name="Enemy" type="CharacterBody2D" parent="." unique_id=1288794757 node_paths=PackedStringArray("health", "root")]
+position = Vector2(460, 209)
+script = ExtResource("5_ptxe3")
+health = NodePath("Health")
+root = NodePath(".")
+
+[node name="Sprite2D" type="Sprite2D" parent="Enemy" unique_id=1991415531]
+texture = ExtResource("2_b052v")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy" unique_id=1335634092]
+position = Vector2(-1, 1.5)
+shape = SubResource("RectangleShape2D_ptxe3")
+
+[node name="Meelee Attack" type="Node2D" parent="Enemy" unique_id=431827702 node_paths=PackedStringArray("attackArea", "attackSprite")]
+position = Vector2(93, -3)
+script = ExtResource("3_c25cv")
+attackArea = NodePath("Area2D")
+attackSprite = NodePath("Sprite2D")
+damage = 1.0
+sustain = 0.3
+
+[node name="Area2D" type="Area2D" parent="Enemy/Meelee Attack" unique_id=513705592]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy/Meelee Attack/Area2D" unique_id=488599497]
+shape = SubResource("CapsuleShape2D_a0x2o")
+
+[node name="Sprite2D" type="Sprite2D" parent="Enemy/Meelee Attack" unique_id=2093990226]
+rotation = -3.1415925
+scale = Vector2(41.2312, -155.13023)
+texture = SubResource("PlaceholderTexture2D_c25cv")
+
+[node name="Health" type="Node2D" parent="Enemy" unique_id=1256833266]
+script = ExtResource("1_c25cv")
+_maxHealth = 100.0
+_currentHealth = 100.0

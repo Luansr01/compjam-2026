@@ -18,7 +18,8 @@ public partial class HealthComponent : Node2D
 		this.die += () => _isDead = true;
 	}
 
-	public void TakeDamage(f64 damage){
+	public void TakeDamage(f64 damage) {
+		GD.Print($"Imma bout to take in {damage} dmg.");
 		this._currentHealth -= damage;
 		if(this._currentHealth < 0) {
 			this._currentHealth = 0;
