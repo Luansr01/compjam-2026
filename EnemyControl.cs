@@ -44,15 +44,64 @@ public partial class EnemyControl : CharacterBody2D
 		Numbers.Damage(this, GlobalPosition, amount, new Color(1.0f, 0.95f, 0.6f), 30.0f);
 	}
 
+	public const string Group = "enemy";
+
 	public override void _Ready()
 	{
+		AddToGroup(Group);
+
 		goal        = GetTree().Root.FirstOrDefaultNodeOfType<Nexus>();
 		health.die += OnDie;
 		health.damaged += OnDamaged;
+		health.overkilled += OnOverkilled;
 		nav.TargetPosition = goal.GlobalPosition;
 		_navtick           = new(0, 0);
 		_slow              = new(0, 0);
 		meleeAttack.BodyEntered += OnBodyEnter;
+	}
+
+	/// A blow that lands past zero detonates the enemy, damaging and shoving
+	/// everything else nearby. Those kills raise their own overkill in turn, so
+	/// a packed wave chains. Uses the group rather than a physics query because
+	/// this fires from inside a BodyEntered callback, where querying the
+	/// physics space mid-flush is unsafe.
+	void OnOverkilled(f64 excess)
+	{
+		f64 radius = Tuning.ExplosionRadius;
+		f64 reach  = Tuning.ExplosionMinShare * health.MaxHealth;
+
+		foreach (Node node in GetTree().GetNodesInGroup(Group))
+		{
+			if (node is not EnemyControl other) continue;
+			if (other == this) continue;
+			if (!GodotObject.IsInstanceValid(other)) continue;
+			if (other.GlobalPosition.DistanceTo(GlobalPosition) > radius) continue;
+
+			// A killing blow already past zero counts, otherwise only one big
+			// enough to spill meaningfully.
+			if (excess < 0.0 && Tuning.ExplosionMinShare <= 0.0) continue;
+
+			other.health.TakeDamage(Tuning.ExplosionDamage);
+			other.ApplySlow(Tuning.ExplosionSlowFactor, Tuning.ExplosionSlowDuration);
+
+			Vector2 away = other.GlobalPosition - GlobalPosition;
+			if (away.LengthSquared() > 0.01f)
+				other.ApplyKnockback(away.Normalized() * (f32)Tuning.ExplosionKnockback);
+		}
+
+		Pulse burst = new()
+		{
+			maxRadius = (f32)radius,
+			seconds   = (f32)Tuning.ExplosionSeconds,
+			ringCount = 3,
+			coreWidth = 46.0f,
+			bandWidth = 26.0f,
+			coreColor = new Color(1.0f, 0.95f, 0.7f, 1.0f),
+			edgeColor = new Color(1.0f, 0.45f, 0.15f, 0.95f),
+		};
+
+		GetTree().Root.AddChild(burst);
+		burst.Position = GlobalPosition;
 	}
 
 	Node2D CurrentGoal()

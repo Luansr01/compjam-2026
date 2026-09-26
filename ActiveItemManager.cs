@@ -144,7 +144,17 @@ public partial class ActiveItemManager : Node
 				Tuning.ShockwaveSlowFactor, Tuning.ShockwaveSlowDuration);
 		}
 
-		Pulse ring = new();
+		Pulse ring = new()
+		{
+			maxRadius = (f32)Tuning.ShockwaveRadius,
+			seconds   = (f32)Tuning.PulseSeconds,
+			ringCount = Tuning.PulseRingCount,
+			coreWidth = (f32)Tuning.PulseCoreWidth,
+			bandWidth = (f32)Tuning.PulseBandWidth,
+			coreColor = Tuning.PulseCoreColor,
+			edgeColor = Tuning.PulseEdgeColor,
+		};
+
 		GetTree().Root.AddChild(ring);
 		ring.Position = origin;
 	}

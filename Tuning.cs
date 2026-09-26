@@ -66,6 +66,15 @@ public partial class Tuning : Node
 	[Export] f64 desperationThreshold = 0.4;
 	[Export] f64 desperationBonus = 0.6;
 	[Export] f64 desperationDamageFloor = 0.3;
+	[ExportGroup("Explosions")]
+	[Export] f64 explosionRadius = 220.0;
+	[Export] f64 explosionDamage = 60.0;
+	[Export] f64 explosionKnockback = 700.0;
+	[Export] f64 explosionSlowFactor = 0.45;
+	[Export] f64 explosionSlowDuration = 2.0;
+	[Export] f64 explosionSeconds = 0.45;
+	[Export] f64 explosionMinShare = 0.0;
+
 	[ExportGroup("Feedback")]
 	[Export] f64 hitFlashSeconds = 0.15;
 
@@ -146,6 +155,14 @@ public partial class Tuning : Node
 	public static f64 DesperationBonus => Instance?.desperationBonus ?? 0.6;
 	public static f64 DesperationDamageFloor => Instance?.desperationDamageFloor ?? 0.3;
 	public static f64 HitFlashSeconds => Instance?.hitFlashSeconds ?? 0.15;
+
+	public static f64 ExplosionRadius => Instance?.explosionRadius ?? 220.0;
+	public static f64 ExplosionDamage => Instance?.explosionDamage ?? 60.0;
+	public static f64 ExplosionKnockback => Instance?.explosionKnockback ?? 700.0;
+	public static f64 ExplosionSlowFactor => Instance?.explosionSlowFactor ?? 0.45;
+	public static f64 ExplosionSlowDuration => Instance?.explosionSlowDuration ?? 2.0;
+	public static f64 ExplosionSeconds => Instance?.explosionSeconds ?? 0.45;
+	public static f64 ExplosionMinShare => Instance?.explosionMinShare ?? 0.0;
 
 	public static f64 VignetteLowHealth => Instance?.vignetteLowHealth ?? 0.45;
 	public static f64 VignettePulseHz => Instance?.vignettePulseHz ?? 2.2;

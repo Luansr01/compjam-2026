@@ -18,7 +18,11 @@ public partial class HealthComponent : Node2D
 	public f64 IncomingDamageScale { get; set; } = 1.0;
 
 	public event Action<f64> damaged;
-	
+
+	/// Raised just before die, with the damage that spilled past zero. A blow that
+	/// lands exactly on the target's remaining health is not an overkill.
+	public event Action<f64> overkilled;
+
 	public f64 BaseMaxHealth { get; private set; }
 	
 	private bool _isDead;
@@ -39,7 +43,9 @@ public partial class HealthComponent : Node2D
 		this._currentHealth -= effective;
 		damaged?.Invoke(effective);
 		if(this._currentHealth <= 0) {
+			f64 excess = -this._currentHealth;
 			this._currentHealth = 0;
+			if (excess > 0.0) overkilled?.Invoke(excess);
 			die?.Invoke();
 		}
 	}
