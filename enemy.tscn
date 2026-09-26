@@ -10,8 +10,8 @@ radius = 57.0
 height = 159.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ptxe3"]
-radius = 43.0
-height = 140.0
+radius = 88.0
+height = 180.0
 
 [node name="Enemy" type="CharacterBody2D" unique_id=273659133 node_paths=PackedStringArray("health", "nav", "meleeAttack", "sprite")]
 collision_layer = 2
