@@ -5,7 +5,7 @@ using System;
 public partial class MeleeAttack : Node2D
 {
 	[Export] Area2D   attackArea;
-	[Export] Sprite2D attackSprite;
+	[Export] AnimatedSprite2D attackSprite;
 	[Export] f64      damage;
 	[Export] f64      sustain;
 	[Export] f64      cooldown;

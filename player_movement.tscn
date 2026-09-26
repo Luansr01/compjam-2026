@@ -13,7 +13,7 @@ outlines = Array[PackedVector2Array]([PackedVector2Array(-1269, -758, -1364, 864
 [node name="Test" type="Node2D" unique_id=783497710]
 
 [node name="Player" parent="." unique_id=2136554558 instance=ExtResource("1_b052v")]
-position = Vector2(100, 145)
+position = Vector2(47, -57)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1702358564]
 zoom = Vector2(3, 3)
