@@ -10,15 +10,20 @@ public partial class MeleeAttack : Node2D
 	[Export] f64      sustain;
 	[Export] f64      cooldown;
 	[Export] u32      team;
+
+	[Export] f64      slowFactor;
+	[Export] f64      slowDuration;
+
+	[Export] AudioStreamPlayer attackSound;
 	
 	public event Area2D.BodyEnteredEventHandler BodyEntered { add => attackArea.BodyEntered += value; remove => attackArea.BodyEntered -= value; } 
 
 	public Vector2 AttackDirection = new(1, 0);
 
-	// Upgrades scale the exported values instead of overwriting them, so the
-	// scene keeps its authored numbers and a reset is just putting 1.0 back.
 	public f64 damageScale   = 1.0;
 	public f64 cooldownScale = 1.0;
+
+	public f64 rageScale = 1.0;
 
 	Timer<f64> _sustain;
 	Timer<f64> _cooldown;
@@ -34,7 +39,6 @@ public partial class MeleeAttack : Node2D
 	{
 		cooldownScale  = scale;
 		_cooldown.time = Math.Max(0.1, cooldown * cooldownScale);
-		// A swing already counting down must not outlast the shorter period.
 		if (_cooldown.current > _cooldown.time) _cooldown.current = _cooldown.time;
 	}
 
@@ -76,31 +80,41 @@ public partial class MeleeAttack : Node2D
 		_cooldown.Restart();
 		LookAt(AttackDirection);
 		SetState(true);
+		attackSound?.Play();
 	}
 
 	void SetState(bool state) {
+		if (_enabled == state) return;
+
 		ResetDetection();
 		if(attackSprite != null) attackSprite.Visible   = state;
 		_enabled               = state;
 	}
 
 	void OnBodyEnter(Node2D n) {
-		GD.Print($"Hey a {n.Name}");
 		if (!_enabled) return;
 		
-		GD.Print($"Hiting {n.Name}");
 		if (n.FirstOrDefaultNodeOfType<HealthComponent>() is var health && health.Team != team) {
-			GD.Print($"Hiting {n.Name} for {damage * damageScale}");
-			health.TakeDamage(damage * damageScale);
+			health.TakeDamage(damage * damageScale * rageScale);
+
+			if (slowFactor > 0
+			 && n.FirstOrDefaultNodeOfType<EnemyControl>() is var control
+			 && GodotObject.IsInstanceValid(control))
+				control.ApplySlow(slowFactor, slowDuration);
 		} 
 	}
 
 	public async void ResetDetection()
 	{
+		SceneTree tree = GetTree();
+		if (attackArea == null || tree == null) return;
+
 		attackArea.Monitoring = false;
 		attackArea.Monitorable = false;
 
-		await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame);
+		await ToSignal(tree, SceneTree.SignalName.PhysicsFrame);
+
+		if (attackArea == null || !GodotObject.IsInstanceValid(attackArea)) return;
 
 		attackArea.Monitoring = true;
 		attackArea.Monitorable = true;

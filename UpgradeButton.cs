@@ -1,8 +1,6 @@
 using Godot;
 using System;
 
-/// One shop entry. Points at an UpgradeKind, renders its level and price, and
-/// greys itself out while the score can't cover the next level.
 [GlobalClass]
 public partial class UpgradeButton : Button
 {
@@ -24,7 +22,6 @@ public partial class UpgradeButton : Button
 
 	void OnPressed() => UpgradeManager.Instance?.TryPurchase(kind);
 
-	// Price is fixed but affordability isn't, so re-check on every score change.
 	void OnScoreChanged(i32 score) => Refresh();
 
 	void Refresh()
@@ -36,14 +33,16 @@ public partial class UpgradeButton : Button
 
 		Text        = $"{LabelFor(kind)}  Lv{level}\n{cost} pts";
 		TooltipText = $"Level {level + 1} costs {cost} points.";
-		Disabled    = !UpgradeManager.Instance.CanAfford(kind);
+		Disabled    = !UpgradeManager.Instance.CanAfford(kind)
+				   || !UpgradeManager.Instance.IsUseful(kind);
 	}
 
 	static string LabelFor(UpgradeKind kind) => kind switch {
 		UpgradeKind.MeleeDamage => "Damage",
 		UpgradeKind.AttackSpeed => "Attack Speed",
 		UpgradeKind.MoveSpeed   => "Move Speed",
-		UpgradeKind.MaxHealth   => "Max Health",
+		UpgradeKind.Heal        => "Heal",
+		UpgradeKind.NexusHeal   => "Nexus Heal",
 		_                       => "Upgrade",
 	};
 }

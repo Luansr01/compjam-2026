@@ -2,17 +2,23 @@
 
 [ext_resource type="Script" uid="uid://ekqsi4u5ote2" path="res://Nexus.cs" id="1_1b4ah"]
 [ext_resource type="Script" uid="uid://c05vcfxal6chv" path="res://HealthComponent.cs" id="2_7ypn0"]
+[ext_resource type="AudioStream" path="res://sfx/nexus_hit.wav" id="3_hitsnd"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c25cv"]
 size = Vector2(131, 82)
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_jtmvs"]
 
-[node name="Nexus" type="StaticBody2D" unique_id=1227742193 node_paths=PackedStringArray("health")]
+[node name="Nexus" type="StaticBody2D" unique_id=1227742193 node_paths=PackedStringArray("health", "sprite", "hitSound")]
 collision_layer = 5
 collision_mask = 5
 script = ExtResource("1_1b4ah")
 health = NodePath("Health")
+sprite = NodePath("Sprite2D")
+hitSound = NodePath("HitSound")
+DrainEnabled = true
+DrainStartPerSecond = 1.0
+DrainPerMinute = 1.5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1747880333]
 position = Vector2(-27.5, -7)
@@ -27,3 +33,6 @@ texture = SubResource("NoiseTexture2D_jtmvs")
 script = ExtResource("2_7ypn0")
 _maxHealth = 1000.0
 _currentHealth = 1000.0
+
+[node name="HitSound" type="AudioStreamPlayer" parent="." unique_id=1627384540]
+stream = ExtResource("3_hitsnd")

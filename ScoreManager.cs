@@ -1,9 +1,6 @@
 using Godot;
 using System;
 
-/// Run-wide score state, registered as the "ScoreManager" autoload. Nodes that
-/// come and go (spawned enemies) report here so the total has one owner that
-/// outlives any single entity.
 public partial class ScoreManager : Node
 {
 	public static ScoreManager Instance { get; private set; }
@@ -23,14 +20,12 @@ public partial class ScoreManager : Node
 		scoreChanged  = null;
 	}
 
-	public void AddKill()
+	public void AddKill(f64 difficulty = 1.0)
 	{
-		Score += pointsPerKill;
+		Score += (i32)Math.Round(pointsPerKill * difficulty);
 		scoreChanged?.Invoke(Score);
 	}
 
-	/// Spend points, e.g. on an upgrade. Returns false and changes nothing if the
-	/// score can't cover it, so callers can use this as the purchase check.
 	public bool TrySpend(i32 amount)
 	{
 		if (amount < 0 || Score < amount) return false;

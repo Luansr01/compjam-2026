@@ -7,21 +7,47 @@ public partial class PlayerControl : CharacterBody2D
 	[Export] HealthComponent health;
 	[Export] MeleeAttack     attack;
 	[Export] Sprite2D        sprite;
+	[Export] AudioStreamPlayer hurtSound;
 	[Export] f32 Speed = 300.0f;
+	[Export] f32 HitFlashSeconds = 0.15f;
 
-	// Upgrade hook; the exported Speed stays the unmodified base.
+	[Export] f64 DesperationThreshold = 0.4;
+	[Export] f64 DesperationBonus     = 0.6;
+
 	public f32 SpeedScale = 1.0f;
 
 	public HealthComponent Health => health;
 	public MeleeAttack     Attack => attack;
 
+	public f32 DesperationSpeed {
+		get {
+			if (health == null || health.MaxHealth <= 0.0) return 1.0f;
+
+			f64 fraction = health.CurrentHealth / health.MaxHealth;
+			if (fraction >= DesperationThreshold || DesperationThreshold <= 0.0) return 1.0f;
+
+			f32 k = (f32)((DesperationThreshold - fraction) / DesperationThreshold);
+			return 1.0f + k * (f32)DesperationBonus;
+		}
+	}
+
+	Tween _flash;
+
 	public override void _Ready() {
-		health.die += OnDie; 
+		health.die   += OnDie;
+		health.damaged += OnDamaged;
 		UpgradeManager.Instance?.ApplyAll(this);
 	}
 	
 	void OnDie() {
 		if (sprite != null) sprite.Visible = false;
+	}
+
+	void OnDamaged(f64 amount)
+	{
+		_flash = Flash.Hit(this, sprite, HitFlashSeconds);
+		hurtSound?.Play();
+		Numbers.Damage(this, GlobalPosition, amount, new Color(1.0f, 0.45f, 0.45f));
 	}
 
 	public override void _PhysicsProcess(f64 delta)
@@ -30,7 +56,7 @@ public partial class PlayerControl : CharacterBody2D
 
 		attack.AttackDirection = GetGlobalMousePosition();
 		Vector2 velocity = Velocity;
-		f32      speed    = Speed * SpeedScale;
+		f32      speed    = Speed * SpeedScale * DesperationSpeed;
 
 		Vector2 direction = Input.GetVector("Left", "Right", "Up", "Down");
 		if (direction != Vector2.Zero)

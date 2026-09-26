@@ -13,7 +13,7 @@ height = 159.0
 radius = 43.0
 height = 140.0
 
-[node name="Enemy" type="CharacterBody2D" unique_id=273659133 node_paths=PackedStringArray("health", "nav", "meleeAttack")]
+[node name="Enemy" type="CharacterBody2D" unique_id=273659133 node_paths=PackedStringArray("health", "nav", "meleeAttack", "sprite")]
 collision_layer = 2
 collision_mask = 2
 script = ExtResource("1_iifgy")
@@ -21,6 +21,7 @@ Speed = 200.0
 health = NodePath("Health")
 nav = NodePath("NavigationAgent2D")
 meleeAttack = NodePath("ContactDamage")
+sprite = NodePath("Sprite2D")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1622449188]
 position = Vector2(1.9999962, 0)
