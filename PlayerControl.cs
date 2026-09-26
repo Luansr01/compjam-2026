@@ -12,6 +12,7 @@ public partial class PlayerControl : CharacterBody2D
 
 	public override void _PhysicsProcess(f64 delta)
 	{
+		attack.AttackDirection = GetGlobalMousePosition();
 		Vector2 velocity = Velocity;
 
 		Vector2 direction = Input.GetVector("Left", "Right", "Up", "Down");

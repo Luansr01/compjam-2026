@@ -4,15 +4,22 @@ using System;
 using f64 = double;
 using f32 = float;
 
+[GlobalClass]
 public partial class MeleeAttack : Node2D
 {
 	[Export] Area2D   attackArea;
 	[Export] Sprite2D attackSprite;
-	[Export] CollisionObject2D attackObject;
 	[Export] f64      damage;
 	[Export] f64      sustain;
-		
-	f64 _sustain = 0.0;
+	[Export] f64      cooldown;
+	
+	public event Area2D.BodyEnteredEventHandler BodyEntered { add => attackArea.BodyEntered += value; remove => attackArea.BodyEntered -= value; } 
+
+	public Vector2 AttackDirection = new(1, 0);
+
+	Timer<f64> _sustain;
+	Timer<f64> _cooldown;
+
 	bool _trigger;
 	bool _enabled;
 
@@ -21,34 +28,47 @@ public partial class MeleeAttack : Node2D
 	public override void _Ready()
 	{
 		attackArea.BodyEntered += OnBodyEnter;
-		attackSprite.Visible    = false;
+		if (attackSprite != null) attackSprite.Visible    = false;
 		_enabled                = false;
+		_sustain                = new(0, sustain);
+		_cooldown               = new(0, cooldown);
 	}
 
+	public override void _PhysicsProcess(f64 delta) {
+	}
 
 	public override void _Process(f64 delta)
 	{
-		if (_sustain >= sustain) {
-			_sustain = 0.0;
-			FlipState();
+		if (!_sustain.Elapsed) {
+			_sustain.Tick(delta);
+			return;
 		}
+
+		SetState(false);
 		
-		if (Mathf.IsZeroApprox(_sustain)) {
-			if (_trigger) {
-				_trigger = false;
-				_sustain += delta;
-				FlipState();
-			}
+		if (!_cooldown.Elapsed) {
+			_cooldown.Tick(delta);
+			return;
 		}
-		else {
-			_sustain += (f32)delta;
+
+		if (_trigger) {
+			Attack();
 		}
+
+		_trigger = false;
 	}
 
-	void FlipState() {
+	void Attack() {
+		_sustain.Restart();
+		_cooldown.Restart();
+		LookAt(AttackDirection);
+		SetState(true);
+	}
+
+	void SetState(bool state) {
 		ResetDetection();
-		attackSprite.Visible   = !attackSprite.Visible;
-		_enabled               = !_enabled;
+		if(attackSprite != null) attackSprite.Visible   = state;
+		_enabled               = state;
 	}
 
 	void OnBodyEnter(Node2D n) {
