@@ -9,10 +9,15 @@ public partial class PlayerControl : CharacterBody2D
 	[Export] Sprite2D        sprite;
 	[Export] f32 Speed = 300.0f;
 
+	// Upgrade hook; the exported Speed stays the unmodified base.
+	public f32 SpeedScale = 1.0f;
+
 	public HealthComponent Health => health;
+	public MeleeAttack     Attack => attack;
 
 	public override void _Ready() {
 		health.die += OnDie; 
+		UpgradeManager.Instance?.ApplyAll(this);
 	}
 	
 	void OnDie() {
@@ -25,17 +30,18 @@ public partial class PlayerControl : CharacterBody2D
 
 		attack.AttackDirection = GetGlobalMousePosition();
 		Vector2 velocity = Velocity;
+		f32      speed    = Speed * SpeedScale;
 
 		Vector2 direction = Input.GetVector("Left", "Right", "Up", "Down");
 		if (direction != Vector2.Zero)
 		{
-			velocity.X = direction.X * Speed;
-			velocity.Y = direction.Y * Speed;
+			velocity.X = direction.X * speed;
+			velocity.Y = direction.Y * speed;
 		}
 		else
 		{
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
-			velocity.Y = Mathf.MoveToward(Velocity.Y, 0, Speed);
+			velocity.X = Mathf.MoveToward(Velocity.X, 0, speed);
+			velocity.Y = Mathf.MoveToward(Velocity.Y, 0, speed);
 		}
 
 		Velocity = velocity;

@@ -15,6 +15,11 @@ public partial class MeleeAttack : Node2D
 
 	public Vector2 AttackDirection = new(1, 0);
 
+	// Upgrades scale the exported values instead of overwriting them, so the
+	// scene keeps its authored numbers and a reset is just putting 1.0 back.
+	public f64 damageScale   = 1.0;
+	public f64 cooldownScale = 1.0;
+
 	Timer<f64> _sustain;
 	Timer<f64> _cooldown;
 
@@ -22,6 +27,16 @@ public partial class MeleeAttack : Node2D
 	bool _enabled;
 
 	public bool Trigger() => _trigger = true;
+
+	public void SetDamageScale(f64 scale) => damageScale = scale;
+
+	public void SetCooldownScale(f64 scale)
+	{
+		cooldownScale  = scale;
+		_cooldown.time = Math.Max(0.1, cooldown * cooldownScale);
+		// A swing already counting down must not outlast the shorter period.
+		if (_cooldown.current > _cooldown.time) _cooldown.current = _cooldown.time;
+	}
 
 	public override void _Ready()
 	{
@@ -75,8 +90,8 @@ public partial class MeleeAttack : Node2D
 		
 		GD.Print($"Hiting {n.Name}");
 		if (n.FirstOrDefaultNodeOfType<HealthComponent>() is var health && health.Team != team) {
-			GD.Print($"Hiting {n.Name} for {damage}");
-			health.TakeDamage(damage);
+			GD.Print($"Hiting {n.Name} for {damage * damageScale}");
+			health.TakeDamage(damage * damageScale);
 		} 
 	}
 

@@ -67,6 +67,7 @@ public partial class EnemyControl : CharacterBody2D
 
 	void OnDie() 
 	{
+		ScoreManager.Instance?.AddKill();
 		QueueFree();
 	}
 }

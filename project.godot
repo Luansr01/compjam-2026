@@ -20,6 +20,11 @@ config/icon="res://icon.svg"
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
+[autoload]
+
+ScoreManager="*res://ScoreManager.cs"
+UpgradeManager="*res://UpgradeManager.cs"
+
 [dotnet]
 
 project/assembly_name="compjam-2026"

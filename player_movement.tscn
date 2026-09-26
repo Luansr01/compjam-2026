@@ -5,8 +5,38 @@
 [ext_resource type="PackedScene" uid="uid://c8fryqcy4j4du" path="res://nexus.tscn" id="4_ptxe3"]
 [ext_resource type="Script" uid="uid://cwrnr8gd2wirk" path="res://NexusHpBar.cs" id="5_ptxe3"]
 [ext_resource type="PackedScene" uid="uid://74yl3oevo5w4" path="res://spawner.tscn" id="6_tbrv0"]
+[ext_resource type="Script" uid="uid://c0gmdx4jf3mry" path="res://ScoreLabel.cs" id="7_sc0re"]
+[ext_resource type="Script" uid="uid://cwcifiptani8y" path="res://UpgradeButton.cs" id="8_upb0tn"]
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_c25cv"]
+[sub_resource type="Gradient" id="Gradient_bg"]
+offsets = PackedFloat32Array(0, 1)
+colors = PackedColorArray(0.13, 0.14, 0.17, 1, 0.06, 0.07, 0.09, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_bg"]
+gradient = SubResource("Gradient_bg")
+width = 8
+height = 8
+fill_to = Vector2(0, 1)
+
+[sub_resource type="Gradient" id="Gradient_plyr"]
+offsets = PackedFloat32Array(0, 1)
+colors = PackedColorArray(0.36, 0.85, 0.42, 1, 0.12, 0.47, 0.2, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_plyr"]
+gradient = SubResource("Gradient_plyr")
+width = 8
+height = 8
+fill_to = Vector2(0, 1)
+
+[sub_resource type="Gradient" id="Gradient_nxus"]
+offsets = PackedFloat32Array(0, 1)
+colors = PackedColorArray(0.44, 0.75, 0.96, 1, 0.14, 0.38, 0.7, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_nxus"]
+gradient = SubResource("Gradient_nxus")
+width = 8
+height = 8
+fill_to = Vector2(0, 1)
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_a0x2o"]
 vertices = PackedVector2Array(1383.3516, 850.0078, -1353.3906, 853.97656, -1259.5625, -748.1094, 1442.6172, -781.8594)
@@ -16,17 +46,6 @@ outlines = Array[PackedVector2Array]([PackedVector2Array(-1269, -758, -1364, 864
 [sub_resource type="CircleShape2D" id="CircleShape2D_b052v"]
 
 [node name="Test" type="Node2D" unique_id=783497710]
-
-[node name="PlayerHealth" type="TextureProgressBar" parent="." unique_id=379405793 node_paths=PackedStringArray("player")]
-offset_left = -428.0
-offset_top = -639.0
-offset_right = 84.0
-offset_bottom = -127.0
-scale = Vector2(1.6926441, 0.08093823)
-value = 100.0
-texture_progress = SubResource("NoiseTexture2D_c25cv")
-script = ExtResource("2_c25cv")
-player = NodePath("../Player")
 
 [node name="Player" parent="." unique_id=2136554558 instance=ExtResource("1_b052v")]
 position = Vector2(100, 145)
@@ -46,13 +65,108 @@ circle = SubResource("CircleShape2D_b052v")
 [node name="Nexus" parent="." unique_id=1227742193 instance=ExtResource("4_ptxe3")]
 position = Vector2(596, 300)
 
-[node name="NexusHpBar" type="TextureProgressBar" parent="." unique_id=401726309 node_paths=PackedStringArray("nexus")]
-offset_left = -405.99997
-offset_top = 574.00006
-offset_right = 106.00003
-offset_bottom = 1086.0
-scale = Vector2(1.7095566, 0.13721137)
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1627384501]
+
+[node name="ScoreLabel" type="Label" parent="HUD" unique_id=1627384502]
+offset_left = 16.0
+offset_top = 8.0
+offset_right = 220.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 24
+script = ExtResource("7_sc0re")
+
+[node name="Shop" type="VBoxContainer" parent="HUD" unique_id=1627384510]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -220.0
+offset_top = 8.0
+offset_right = -16.0
+offset_bottom = 200.0
+grow_horizontal = 0
+theme_override_constants/separation = 6
+
+[node name="MeleeDamage" type="Button" parent="HUD/Shop" unique_id=1627384511]
+custom_minimum_size = Vector2(204, 46)
+layout_mode = 2
+text = "Damage"
+script = ExtResource("8_upb0tn")
+
+[node name="AttackSpeed" type="Button" parent="HUD/Shop" unique_id=1627384512]
+custom_minimum_size = Vector2(204, 46)
+layout_mode = 2
+text = "Attack Speed"
+script = ExtResource("8_upb0tn")
+kind = 1
+
+[node name="MoveSpeed" type="Button" parent="HUD/Shop" unique_id=1627384513]
+custom_minimum_size = Vector2(204, 46)
+layout_mode = 2
+text = "Move Speed"
+script = ExtResource("8_upb0tn")
+kind = 2
+
+[node name="MaxHealth" type="Button" parent="HUD/Shop" unique_id=1627384514]
+custom_minimum_size = Vector2(204, 46)
+layout_mode = 2
+text = "Max Health"
+script = ExtResource("8_upb0tn")
+kind = 3
+
+[node name="PlayerHealth" type="TextureProgressBar" parent="HUD" unique_id=379405793 node_paths=PackedStringArray("player", "readout")]
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -240.0
+offset_top = 8.0
+offset_right = 240.0
+offset_bottom = 36.0
+grow_horizontal = 2
+mouse_filter = 2
 value = 100.0
-texture_progress = SubResource("NoiseTexture2D_c25cv")
+texture_under = SubResource("GradientTexture2D_bg")
+texture_progress = SubResource("GradientTexture2D_plyr")
+script = ExtResource("2_c25cv")
+player = NodePath("../../Player")
+readout = NodePath("Readout")
+
+[node name="Readout" type="Label" parent="HUD/PlayerHealth" unique_id=1627384520]
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 16
+text = "100 / 100"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NexusHpBar" type="TextureProgressBar" parent="HUD" unique_id=401726309 node_paths=PackedStringArray("nexus", "readout")]
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -240.0
+offset_top = 44.0
+offset_right = 240.0
+offset_bottom = 72.0
+grow_horizontal = 2
+mouse_filter = 2
+value = 100.0
+texture_under = SubResource("GradientTexture2D_bg")
+texture_progress = SubResource("GradientTexture2D_nxus")
 script = ExtResource("5_ptxe3")
-nexus = NodePath("../Nexus")
+nexus = NodePath("../../Nexus")
+readout = NodePath("Readout")
+
+[node name="Readout" type="Label" parent="HUD/NexusHpBar" unique_id=1627384521]
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 16
+text = "1000 / 1000"
+horizontal_alignment = 1
+vertical_alignment = 1
